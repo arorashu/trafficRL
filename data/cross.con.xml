@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<connections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/connections_file.xsd">
+	<connection from="1i" to="2o"/>
+	<connection from="1i" to="4o"/>
+	<connection from="1i" to="3o"/>
+	<connection from="2i" to="1o"/>
+	<connection from="2i" to="3o"/>
+	<connection from="2i" to="4o"/>
+	<connection from="3i" to="4o"/>
+	<connection from="3i" to="1o"/>
+	<connection from="3i" to="2o"/>
+	<connection from="4i" to="3o"/>
+	<connection from="4i" to="1o"/>
+	<connection from="4i" to="2o"/>
+
+	<!-- <connection from="51o" to="14l"/>
+	<connection from="51o" to="21o"/>
+	<connection from="14l" to="54i"/>
+	<connection from="24i" to="54i"/>
+
+	<connection from="54o" to="24o"/>
+	<connection from="54o" to="42l"/>
+	<connection from="42l" to="52i"/>
+	<connection from="22i" to="52i"/>
+
+	<connection from="52o" to="22o"/>
+	<connection from="52o" to="23l"/>
+	<connection from="23l" to="53i"/>
+	<connection from="23i" to="53i"/>
+
+	<connection from="53o" to="31l"/>
+	<connection from="53o" to="23o"/>
+	<connection from="31l" to="51i"/>
+	<connection from="21i" to="51i"/> -->
+
+</connections>

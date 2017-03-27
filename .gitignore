@@ -1,0 +1,6 @@
+embedded/
+plain/
+embedded.py
+testsuite*
+tripinfo
+
