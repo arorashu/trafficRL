@@ -2,5 +2,5 @@ embedded/
 plain/
 embedded.py
 testsuite*
-tripinfo
+tripinfo.xml
 
