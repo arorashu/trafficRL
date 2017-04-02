@@ -1,6 +1,6 @@
 def getReward (pre, curr, N):
-    """pre = state in previous time step
-    curr = current state
+    """pre = state in previous time step (2+N vector)
+    curr = current state (2+N vector)
     N = number of phases"""
     reward = 0
     for i in range(2, N+2):
