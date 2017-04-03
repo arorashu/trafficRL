@@ -17,6 +17,10 @@ PROBLEMS:
 
 	POSSIBLE SOLUTION:	Set yellow time and step so as to avoid this
 
+* Making alpha i.e. learning rate variable
+		- done in paper
+	POSSINLE SOLUTION:	Keep count of visits to pair (s,a) in DB
+
 
 IMPROVEMENTS:
 
