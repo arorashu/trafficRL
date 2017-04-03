@@ -27,6 +27,7 @@ import sys
 import optparse
 import subprocess
 import random
+#from sharedFunctions import getEdgeFromLane
 
 # we need to import python modules from the $SUMO_HOME/tools directory
 try:
@@ -185,8 +186,25 @@ def run():
         #     else:
         #         # otherwise try to keep green for EW
         #         traci.trafficlights.setPhase("0", 2)
-        num_vehicles=traci.edge.getLastStepVehicleNumber("1i")
-        print ("number of vehicles on 1st edge = " , num_vehicles )
+        edges=[]
+        queue_length=[]
+        #num_vehicles= traci.edge.getLastStepVehicleNumber("1i")
+        #print ("number of vehicles on 1st edge = " , num_vehicles ,"\n")
+        #halting_vehicles=traci.edge.getLastStepHaltingNumber("1i")
+        #print ("number of halting vehicles on 1st edge = " , halting_vehicles ,"\n" )
+        #mean_length=traci.edge.getLastStepLength("1i")
+        #print ("mean length of vehicles on 1st edge = " , mean_length ,"\n")
+        lanes = traci.trafficlights.getControlledLanes("0")
+        print(lanes)
+        i=0;
+        while i<len(lanes):
+                edges.append(traci.lane.getEdgeID(lanes[i]))
+                i+=4
+        #edge= traci.lane.getEdgeID(lane)
+        print (edges)
+        for edge in edges:
+            queue_length.append(traci.edge.getLastStepHaltingNumber(edge))
+        print(queue_length,"\n")
         step += 1
     traci.close()
     sys.stdout.flush()
@@ -217,5 +235,8 @@ if __name__ == "__main__":
     # this is the normal way of using traci. sumo is started as a
     # subprocess and then the python script connects and runs
     traci.start([sumoBinary, "-c", "data/cross.sumocfg",
+                             "-n", "data/cross.net.xml",
+                             "-a", "data/cross.add.xml",
+                             "--queue-output", "queue.xml",  
                              "--tripinfo-output", "tripinfo.xml"])
     run()
