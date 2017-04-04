@@ -27,6 +27,7 @@ import sys
 import optparse
 import subprocess
 import random
+#from sharedFunctions import getEdgeFromLane
 
 # we need to import python modules from the $SUMO_HOME/tools directory
 try:
@@ -40,7 +41,6 @@ except ImportError:
         "please declare environment variable 'SUMO_HOME' as the root directory of your sumo installation (it should contain folders 'bin', 'tools' and 'docs')")
 
 import traci
-
 
 def generate_routefile():
     random.seed(42)  # make tests reproducible
@@ -159,38 +159,67 @@ def generate_routefile():
                 lastVeh = i   
         print("</routes>", file=routes)
 
-# The program looks like this
-#    <tlLogic id="0" type="static" programID="0" offset="0">
-# the locations of the tls are      NESW
-#        <phase duration="31" state="GrGr"/>
-#        <phase duration="6"  state="yryr"/>
-#        <phase duration="31" state="rGrG"/>
-#        <phase duration="6"  state="ryry"/>
-#    </tlLogic>
-
-
 def run():
     """execute the TraCI control loop"""
     step = 0
     # we start with phase 2 where EW has green
-    traci.trafficlights.setPhase("0", 2)
+    traci.trafficlights.setPhase("0", 0)
+
+    phase_vector = 8*[None]
+    phase_vector[0] = (traci.trafficlights.getPhase("0"))
+    phase_vector[1] = 0
+
+    min_green = 10
+    max_green = 120
+    yellow = 5
+    db_step = 5000
 
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
-        # if traci.trafficlights.getPhase("0") == 2:
-        #     # we are not already switching
-        #     if traci.inductionloop.getLastStepVehicleNumber("0") > 0:
-        #         # there is a vehicle from the north, switch
-        #         traci.trafficlights.setPhase("0", 3)
-        #     else:
-        #         # otherwise try to keep green for EW
-        #         traci.trafficlights.setPhase("0", 2)
-        num_vehicles=traci.edge.getLastStepVehicleNumber("1i")
-        print ("number of vehicles on 1st edge = " , num_vehicles )
+        edges=[]
+        queue_length=[]
+
+        lanes = traci.trafficlights.getControlledLanes("0")
+        lanes_uniq = []
+        
+        i = 0;
+        while i < len(lanes):
+            if (i%2 == 0) :
+                lanes_uniq.append(lanes[i])
+            i+=1
+
+        print(lanes_uniq)
+        lanes = lanes_uniq
+
+        # i=0;
+        # while i<len(lanes):
+        #         edges.append(traci.lane.getEdgeID(lanes[i]))
+        #         i+=4
+        # print (edges)
+
+        for lane in lanes:
+            queue_length.append(traci.lane.getLastStepHaltingNumber(lane))
+        print(queue_length,"\n")
+
+        new_phase = traci.trafficlights.getPhase("0")
+        if (new_phase != phase_vector[0]) :
+            phase_vector[0] = new_phase
+            phase_vector[1] = 1
+        else:
+            phase_vector[1] += 1
+        
+        phase_vector[2] = max(queue_length[0], queue_length[1])
+        phase_vector[3] = max(queue_length[0], queue_length[5])
+        phase_vector[4] = max(queue_length[4], queue_length[5])
+        phase_vector[5] = max(queue_length[6], queue_length[7])
+        phase_vector[6] = max(queue_length[2], queue_length[6])
+        phase_vector[7] = max(queue_length[2], queue_length[3])
+
+        print(phase_vector, "\n")
+
         step += 1
     traci.close()
     sys.stdout.flush()
-
 
 def get_options():
     optParser = optparse.OptionParser()
@@ -217,5 +246,8 @@ if __name__ == "__main__":
     # this is the normal way of using traci. sumo is started as a
     # subprocess and then the python script connects and runs
     traci.start([sumoBinary, "-c", "data/cross.sumocfg",
+                             "-n", "data/cross.net.xml",
+                             "-a", "data/cross.add.xml",
+                             "--queue-output", "queue.xml",  
                              "--tripinfo-output", "tripinfo.xml"])
     run()
