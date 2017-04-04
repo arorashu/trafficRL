@@ -3,7 +3,7 @@ def queueBalanceReward(pre, curr, N):
     curr = current state (2+N vector)
     N = number of phases"""
     reward = 0
-    for i in range(2, N+2):
+    for i in range(0, N):
         reward = reward + curr[i]**2 - pre[i]**2
     return reward
 

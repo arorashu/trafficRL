@@ -27,7 +27,8 @@ import sys
 import optparse
 import subprocess
 import random
-from dbFunction import dbFunction
+from dbFunction import dbFunction, initPre
+from globals import init
 
 #from sharedFunctions import getEdgeFromLane
 
@@ -175,7 +176,7 @@ def run():
     min_green = 10
     max_green = 120
     yellow = 5
-    db_step = 5000
+    db_step = 1000
 
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
@@ -191,7 +192,6 @@ def run():
                 lanes_uniq.append(lanes[i])
             i+=1
 
-        print(lanes_uniq)
         lanes = lanes_uniq
 
         # i=0;
@@ -202,7 +202,6 @@ def run():
 
         for lane in lanes:
             queue_length.append(traci.lane.getLastStepHaltingNumber(lane))
-        print(queue_length,"\n")
 
         phase_vector[0] = max(queue_length[0], queue_length[1])
         phase_vector[1] = max(queue_length[0], queue_length[5])
@@ -211,12 +210,13 @@ def run():
         phase_vector[4] = max(queue_length[2], queue_length[6])
         phase_vector[5] = max(queue_length[2], queue_length[3])
 
-        print(phase_vector, "\n")
-
         if (step%db_step == 0) :
+            print(phase_vector, "\n")
             nextAction = dbFunction(phase_vector)
             if (nextAction == 1):
+                print(curr_phase, curr_time, "\n")
                 curr_phase = (curr_phase + 1)%6
+                traci.trafficlights.setPhase("0", curr_phase)
                 curr_time = 1
             else :
                 curr_time += 1
@@ -254,4 +254,6 @@ if __name__ == "__main__":
                              "-a", "data/cross.add.xml",
                              "--queue-output", "queue.xml",
                              "--tripinfo-output", "tripinfo.xml"])
+    init()
+    initPre()
     run()
