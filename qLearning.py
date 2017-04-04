@@ -3,7 +3,7 @@ def qLearning(currQ, alpha, gamma, reward, nextMaxQ):
     alpha = learning rate (can be const. or variable)
     gamma = discount factor
     reward = from getReward function
-    nextMaxQ = max possible reward from next step i.e. max over Q of (st+1, at+1)
+    nextMaxQ =  max possible reward from next step i.e. max over Q of (st+1, at+1)
                 scan DB for next possible actions of curr state and find nextMaxQ
     """
     newQ = currQ + alpha*(reward + gamma*nextMaxQ - currQ)
