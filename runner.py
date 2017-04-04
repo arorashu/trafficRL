@@ -27,6 +27,9 @@ import sys
 import optparse
 import subprocess
 import random
+from dbFunction import dbFunction, initPre
+from globals import init
+
 #from sharedFunctions import getEdgeFromLane
 
 # we need to import python modules from the $SUMO_HOME/tools directory
@@ -73,7 +76,7 @@ def generate_routefile():
         <route id="right_up" edges="51o 1i 4o 54i" />
         <route id="right_down" edges="51o 1i 3o 53i" />
 
-        
+
         <route id="left" edges="52o 2i 1o 51i" />
         <route id="left_down" edges="52o 2i 3o 53i" />
         <route id="left_up" edges="52o 2i 4o 54i" />
@@ -96,7 +99,7 @@ def generate_routefile():
                 t="typeB"
             else:
                 t="typeC"
-                
+
             if random.uniform(0, 1) < pNW:
                 print('    <vehicle id="down_right_%i" type="%s" route="down_right" depart="%i" />' % (
                     vehNr, t, i), file=routes)
@@ -156,8 +159,9 @@ def generate_routefile():
                 print('    <vehicle id="right_%i" type="%s" route="right" depart="%i" />' % (
                     vehNr, t, i), file=routes)
                 vehNr += 1
-                lastVeh = i   
+                lastVeh = i
         print("</routes>", file=routes)
+
 
 def run():
     """execute the TraCI control loop"""
@@ -165,14 +169,14 @@ def run():
     # we start with phase 2 where EW has green
     traci.trafficlights.setPhase("0", 0)
 
-    phase_vector = 8*[None]
-    phase_vector[0] = (traci.trafficlights.getPhase("0"))
-    phase_vector[1] = 0
+    phase_vector = 6*[None]
+    curr_phase = traci.trafficlights.getPhase("0")
+    curr_time = 0
 
     min_green = 10
     max_green = 120
     yellow = 5
-    db_step = 5000
+    db_step = 100
 
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
@@ -181,14 +185,13 @@ def run():
 
         lanes = traci.trafficlights.getControlledLanes("0")
         lanes_uniq = []
-        
+
         i = 0;
         while i < len(lanes):
             if (i%2 == 0) :
                 lanes_uniq.append(lanes[i])
             i+=1
 
-        print(lanes_uniq)
         lanes = lanes_uniq
 
         # i=0;
@@ -199,23 +202,24 @@ def run():
 
         for lane in lanes:
             queue_length.append(traci.lane.getLastStepHaltingNumber(lane))
-        print(queue_length,"\n")
 
-        new_phase = traci.trafficlights.getPhase("0")
-        if (new_phase != phase_vector[0]) :
-            phase_vector[0] = new_phase
-            phase_vector[1] = 1
-        else:
-            phase_vector[1] += 1
-        
-        phase_vector[2] = max(queue_length[0], queue_length[1])
-        phase_vector[3] = max(queue_length[0], queue_length[5])
-        phase_vector[4] = max(queue_length[4], queue_length[5])
-        phase_vector[5] = max(queue_length[6], queue_length[7])
-        phase_vector[6] = max(queue_length[2], queue_length[6])
-        phase_vector[7] = max(queue_length[2], queue_length[3])
+        phase_vector[0] = max(queue_length[0], queue_length[1])
+        phase_vector[1] = max(queue_length[0], queue_length[5])
+        phase_vector[2] = max(queue_length[4], queue_length[5])
+        phase_vector[3] = max(queue_length[6], queue_length[7])
+        phase_vector[4] = max(queue_length[2], queue_length[6])
+        phase_vector[5] = max(queue_length[2], queue_length[3])
 
-        print(phase_vector, "\n")
+        if (step%db_step == 0) :
+            nextAction = dbFunction(phase_vector)
+            if (nextAction == 1):
+                print(phase_vector, "DBSTEP\n")
+                print(curr_phase, curr_time, "\n")
+                curr_phase = (curr_phase + 1)%6
+                traci.trafficlights.setPhase("0", curr_phase)
+                curr_time = 1
+            else :
+                curr_time += 1
 
         step += 1
     traci.close()
@@ -248,6 +252,8 @@ if __name__ == "__main__":
     traci.start([sumoBinary, "-c", "data/cross.sumocfg",
                              "-n", "data/cross.net.xml",
                              "-a", "data/cross.add.xml",
-                             "--queue-output", "queue.xml",  
+                             "--queue-output", "queue.xml",
                              "--tripinfo-output", "tripinfo.xml"])
+    init()
+    initPre()
     run()

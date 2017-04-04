@@ -7,7 +7,7 @@
         <route id="right_up" edges="51o 1i 4o 54i" />
         <route id="right_down" edges="51o 1i 3o 53i" />
 
-        
+
         <route id="left" edges="52o 2i 1o 51i" />
         <route id="left_down" edges="52o 2i 3o 53i" />
         <route id="left_up" edges="52o 2i 4o 54i" />
