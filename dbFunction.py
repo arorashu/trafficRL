@@ -42,7 +42,6 @@ def dbFunction(curr):
 
     reward = queueBalanceReward(globals.pre, curr, globals.N)
 
-    print(globals.pre, globals.preAction, "\n")
     currQ = qValues.find_one({"state":  globals.pre, "action":   globals.preAction})['qVal']
 
     tempBSON = []

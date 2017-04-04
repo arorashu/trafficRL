@@ -176,7 +176,7 @@ def run():
     min_green = 10
     max_green = 120
     yellow = 5
-    db_step = 1000
+    db_step = 100
 
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
@@ -211,9 +211,9 @@ def run():
         phase_vector[5] = max(queue_length[2], queue_length[3])
 
         if (step%db_step == 0) :
-            print(phase_vector, "\n")
             nextAction = dbFunction(phase_vector)
             if (nextAction == 1):
+                print(phase_vector, "DBSTEP\n")
                 print(curr_phase, curr_time, "\n")
                 curr_phase = (curr_phase + 1)%6
                 traci.trafficlights.setPhase("0", curr_phase)
