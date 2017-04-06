@@ -26,7 +26,8 @@ def initPre():
                     "visits":   1})
     qValues.insert_many(temp)
 
-def dbFunction(curr):
+def dbFunction(curr, pre, preAction):
+    print(curr, pre, "CURR PRE")
     currBSON = qValues.find({"state": curr})
     temp = []
     if (currBSON.count() == 0):
@@ -37,12 +38,11 @@ def dbFunction(curr):
                         "visits":   1})
         qValues.insert_many(temp)
         currBSON = temp
-
     # TO-DO: visits to be updated
 
-    reward = queueBalanceReward(globals.pre, curr, globals.N)
+    reward = queueBalanceReward(pre, curr, globals.N)
 
-    currQ = qValues.find_one({"state":  globals.pre, "action":   globals.preAction})['qVal']
+    currQ = qValues.find_one({"state":  pre, "action":   preAction})['qVal']
 
     tempBSON = []
     for c in currBSON:
@@ -52,9 +52,12 @@ def dbFunction(curr):
     nextMaxQ = currBSON[0]['qVal']
     for i in currBSON:
         nextMaxQ = max(nextMaxQ, i['qVal'])
+
+    print(currQ, globals.alpha, globals.gamma, reward, nextMaxQ, "QLEARNING")
     newQ = qLearning(currQ, globals.alpha, globals.gamma, reward, nextMaxQ)
 
-    qValues.find_one_and_update({"state": globals.pre, "action": globals.preAction}, {'$set': {"qVal": newQ}})
+    print(newQ, pre, "NEWQ")
+    qValues.find_one_and_update({"state": pre, "action": preAction}, {'$set': {"qVal": newQ}})
 
     currBSON = qValues.find({"state": curr})
 
@@ -70,7 +73,6 @@ def dbFunction(curr):
     nextAction = eGreedy(globals.numActions, globals.E, globals.age, greedyAction)
 
     globals.age += 1
-    globals.pre = curr
-    globals.preAction = nextAction
-
-    return nextAction
+    print(curr, "CURRRRRRRRRRRRRRRRRRRRRRRR007")
+    newc = curr[:]
+    return nextAction, newc, nextAction

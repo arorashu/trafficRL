@@ -47,25 +47,26 @@ import traci
 
 def generate_routefile():
     random.seed(42)  # make tests reproducible
-    N = 3600  # number of time steps
+    N = 30000 # number of time steps
     # demand per second from different directions
 
-    pWE = 1. / 8
-    pWN = 1. / 16
-    pWS = 1. / 24
-    pEW = 1. / 32
-    pES = 1. / 40
-    pEN = 1. / 48
-    pSN = 1. / 56
-    pSW = 1. / 64
-    pSE = 1. / 72
-    pNS = 1. / 80
-    pNE = 1. / 88
-    pNW = 1. / 96
+    pWE = 12. / 12
+    pWN = 11. / 12
+    pWS = 10. / 12
+    pEW = 9. / 12
+    pES = 8. / 12
+    pEN = 7. / 12
+    pSN = 6. / 12
+    pSW = 5. / 12
+    pSE = 4. / 12
+    pNS = 3. / 12
+    pNE = 2. / 12
+    pNW = 1. / 12
 
     pA  = 1. /30
     pB  = 2. /30
-    pC  = 1. /10
+    pC  = 3. /30
+
     with open("data/cross.rou.xml", "w") as routes:
         print("""<routes>
         <vType id="typeA" accel="0.8" decel="4.5" sigma="0.8" length="5" minGap="2.5" maxSpeed="20" guiShape="passenger/sedan "/>
@@ -93,69 +94,71 @@ def generate_routefile():
         vehNr = 0
         t = "typeA"
         for i in range(N):
-            if random.uniform(0, 1) < pA:
+            tR = random.uniform(0, 1)
+            rR = random.uniform(0, 1)
+            if tR < pA:
                 t="typeA"
-            elif random.uniform(0, 1) < pB:
+            elif tR < pB:
                 t="typeB"
             else:
                 t="typeC"
 
-            if random.uniform(0, 1) < pNW:
+            if rR < pNW:
                 print('    <vehicle id="down_right_%i" type="%s" route="down_right" depart="%i" />' % (
                     vehNr, t, i), file=routes)
                 vehNr += 1
                 lastVeh = i
-            if random.uniform(0, 1) < pNE:
+            elif rR < pNE:
                 print('    <vehicle id="down_left_%i" type="%s" route="down_left" depart="%i" />' % (
                     vehNr, t, i), file=routes)
                 vehNr += 1
                 lastVeh = i
-            if random.uniform(0, 1) < pNS:
+            elif rR < pNS:
                 print('    <vehicle id="down_%i" type="%s" route="down" depart="%i" />' % (
                     vehNr, t, i), file=routes)
                 vehNr += 1
                 lastVeh = i
-            if random.uniform(0, 1) < pSE:
+            elif rR < pSE:
                 print('    <vehicle id="up_right_%i" type="%s" route="up_right" depart="%i" />' % (
                     vehNr, t, i), file=routes)
                 vehNr += 1
                 lastVeh = i
-            if random.uniform(0, 1) < pSW:
+            elif rR < pSW:
                 print('    <vehicle id="up_left_%i" type="%s" route="up_left" depart="%i" />' % (
                     vehNr, t, i), file=routes)
                 vehNr += 1
                 lastVeh = i
-            if random.uniform(0, 1) < pSN:
+            elif rR < pSN:
                 print('    <vehicle id="up_%i" type="%s" route="up" depart="%i" />' % (
                     vehNr, t, i), file=routes)
                 vehNr += 1
                 lastVeh = i
-            if random.uniform(0, 1) < pEN:
+            elif rR < pEN:
                 print('    <vehicle id="left_up_%i" type="%s" route="left_up" depart="%i" />' % (
                     vehNr, t, i), file=routes)
                 vehNr += 1
                 lastVeh = i
-            if random.uniform(0, 1) < pES:
+            elif rR < pES:
                 print('    <vehicle id="left_down_%i" type="%s" route="left_down" depart="%i" />' % (
                     vehNr, t, i), file=routes)
                 vehNr += 1
                 lastVeh = i
-            if random.uniform(0, 1) < pEW:
+            elif rR < pEW:
                 print('    <vehicle id="left_%i" type="%s" route="left" depart="%i" />' % (
                     vehNr, t, i), file=routes)
                 vehNr += 1
                 lastVeh = i
-            if random.uniform(0, 1) < pWS:
+            elif rR < pWS:
                 print('    <vehicle id="right_down_%i" type="%s" route="right_down" depart="%i" />' % (
                     vehNr, t, i), file=routes)
                 vehNr += 1
                 lastVeh = i
-            if random.uniform(0, 1) < pWN:
+            elif rR < pWN:
                 print('    <vehicle id="right_up_%i" type="%s" route="right_up" depart="%i" />' % (
                     vehNr, t, i), file=routes)
                 vehNr += 1
                 lastVeh = i
-            if random.uniform(0, 1) < pWE:
+            else:
                 print('    <vehicle id="right_%i" type="%s" route="right" depart="%i" />' % (
                     vehNr, t, i), file=routes)
                 vehNr += 1
@@ -176,6 +179,8 @@ def run():
     min_green = 10
     max_green = 120
     yellow = 5
+    pre = 6*[0]
+    preAction = 0
     db_step = 100
 
     while traci.simulation.getMinExpectedNumber() > 0:
@@ -203,15 +208,17 @@ def run():
         for lane in lanes:
             queue_length.append(traci.lane.getLastStepHaltingNumber(lane))
 
-        phase_vector[0] = max(queue_length[0], queue_length[1])
-        phase_vector[1] = max(queue_length[0], queue_length[5])
-        phase_vector[2] = max(queue_length[4], queue_length[5])
-        phase_vector[3] = max(queue_length[6], queue_length[7])
-        phase_vector[4] = max(queue_length[2], queue_length[6])
-        phase_vector[5] = max(queue_length[2], queue_length[3])
+        phase_vector[0] = int(round(max(queue_length[0], queue_length[1])/15))
+        phase_vector[1] = int(round(max(queue_length[0], queue_length[5])/15))
+        phase_vector[2] = int(round(max(queue_length[4], queue_length[5])/15))
+        phase_vector[3] = int(round(max(queue_length[6], queue_length[7])/15))
+        phase_vector[4] = int(round(max(queue_length[2], queue_length[6])/15))
+        phase_vector[5] = int(round(max(queue_length[2], queue_length[3])/15))
 
         if (step%db_step == 0) :
-            nextAction = dbFunction(phase_vector)
+            print(pre, preAction, "PLZ1")
+            nextAction, pre, preAction = dbFunction(phase_vector, pre, preAction)
+            print(pre, preAction, "PLZ2")
             if (nextAction == 1):
                 print(phase_vector, "DBSTEP\n")
                 print(curr_phase, curr_time, "\n")
@@ -220,8 +227,8 @@ def run():
                 curr_time = 1
             else :
                 curr_time += 1
-
         step += 1
+
     traci.close()
     sys.stdout.flush()
 
