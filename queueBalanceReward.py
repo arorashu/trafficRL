@@ -6,7 +6,7 @@ def queueBalanceReward(pre, curr, N):
     print(curr, pre, N, "CURR PRE N")
     for i in range(0, N):
         reward = reward + curr[i]**2 - pre[i]**2
-    print(reward, "Reward")
+    #print(reward, "Reward")
     return reward
 
 if __name__ == "__main__":

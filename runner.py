@@ -216,9 +216,9 @@ def run():
         phase_vector[5] = int(round(max(queue_length[2], queue_length[3])/15))
 
         if (step%db_step == 0) :
-            print(pre, preAction, "PLZ1")
+            #print(pre, preAction, "PRE, PREACTION before DBFUNCTION")
             nextAction, pre, preAction = dbFunction(phase_vector, pre, preAction)
-            print(pre, preAction, "PLZ2")
+            #print(pre, preAction, "PRE, PREACTION after DBFUNCTION")
             if (nextAction == 1):
                 print(phase_vector, "DBSTEP\n")
                 print(curr_phase, curr_time, "\n")
