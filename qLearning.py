@@ -17,4 +17,4 @@ if __name__=="__main__":
     gamma = 0.7
     reward = 2
     nextMaxQ= 5
-    print(qLearning(currQ, alpha, gamma, reward, nextMaxQ))
+    # print(qLearning(currQ, alpha, gamma, reward, nextMaxQ))

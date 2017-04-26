@@ -25,4 +25,4 @@ if __name__=="__main__":
     E = 0.05
     age = 10
     greedyAction = 2
-    print(eGreedy(numActions, E, age, greedyAction))
+    # print(eGreedy(numActions, E, age, greedyAction))

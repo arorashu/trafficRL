@@ -47,7 +47,7 @@ import traci
 
 def generate_routefile():
     random.seed(42)  # make tests reproducible
-    N = 30000 # number of time steps
+    N = 250000 # number of time steps
     # demand per second from different directions
 
     pWE = 12. / 12
@@ -93,7 +93,8 @@ def generate_routefile():
         lastVeh = 0
         vehNr = 0
         t = "typeA"
-        for i in range(N):
+        for I in range(N/4):
+            i = I*4
             tR = random.uniform(0, 1)
             rR = random.uniform(0, 1)
             if tR < pA:
@@ -182,6 +183,8 @@ def run():
     pre = 6*[0]
     preAction = 0
     db_step = 100
+    avg_qL = 0
+    avg_qL_curr = 0
 
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
@@ -199,14 +202,14 @@ def run():
 
         lanes = lanes_uniq
 
-        # i=0;
-        # while i<len(lanes):
-        #         edges.append(traci.lane.getEdgeID(lanes[i]))
-        #         i+=4
-        # print (edges)
-
+        avg_qL_curr = 0
         for lane in lanes:
             queue_length.append(traci.lane.getLastStepHaltingNumber(lane))
+            avg_qL_curr += traci.lane.getLastStepHaltingNumber(lane)
+
+        avg_qL_curr = avg_qL_curr/(len(lanes)*1.0)
+
+        avg_qL = (avg_qL*step + avg_qL_curr)/((step+1)*1.0)
 
         phase_vector[0] = int(round(max(queue_length[0], queue_length[1])/15))
         phase_vector[1] = int(round(max(queue_length[0], queue_length[5])/15))
@@ -216,18 +219,17 @@ def run():
         phase_vector[5] = int(round(max(queue_length[2], queue_length[3])/15))
 
         if (step%db_step == 0) :
-            #print(pre, preAction, "PRE, PREACTION before DBFUNCTION")
+            print(avg_qL, avg_qL_curr, step)
             nextAction, pre, preAction = dbFunction(phase_vector, pre, preAction)
-            #print(pre, preAction, "PRE, PREACTION after DBFUNCTION")
             if (nextAction == 1):
-                print(phase_vector, "DBSTEP\n")
-                print(curr_phase, curr_time, "\n")
                 curr_phase = (curr_phase + 1)%6
                 traci.trafficlights.setPhase("0", curr_phase)
                 curr_time = 1
             else :
                 curr_time += 1
         step += 1
+
+    print(avg_qL, "Final")
 
     traci.close()
     sys.stdout.flush()
