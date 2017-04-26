@@ -27,7 +27,6 @@ def initPre():
     qValues.insert_many(temp)
 
 def dbFunction(curr, pre, preAction):
-    #print(curr, pre, "CURR PRE")
     currBSON = qValues.find({"state": curr})
     temp = []
     if (currBSON.count() == 0):
@@ -53,10 +52,8 @@ def dbFunction(curr, pre, preAction):
     for i in currBSON:
         nextMaxQ = max(nextMaxQ, i['qVal'])
 
-    #print(currQ, globals.alpha, globals.gamma, reward, nextMaxQ, "QLEARNING")
     newQ = qLearning(currQ, globals.alpha, globals.gamma, reward, nextMaxQ)
 
-    #print(newQ, pre, "NEWQ")
     qValues.find_one_and_update({"state": pre, "action": preAction}, {'$set': {"qVal": newQ}})
 
     currBSON = qValues.find({"state": curr})
@@ -73,6 +70,5 @@ def dbFunction(curr, pre, preAction):
     nextAction = eGreedy(globals.numActions, globals.E, globals.age, greedyAction)
 
     globals.age += 1
-    #print(curr, "CURR")
     newc = curr[:]
     return nextAction, newc, nextAction
