@@ -27,6 +27,10 @@ import sys
 import optparse
 import subprocess
 import random
+from dbFunction import dbFunction, initPre
+from globals import init
+
+#from sharedFunctions import getEdgeFromLane
 
 # we need to import python modules from the $SUMO_HOME/tools directory
 try:
@@ -41,28 +45,28 @@ except ImportError:
 
 import traci
 
-
 def generate_routefile():
     random.seed(42)  # make tests reproducible
-    N = 3600  # number of time steps
+    N = 250000 # number of time steps
     # demand per second from different directions
 
-    pWE = 1. / 8
-    pWN = 1. / 16
-    pWS = 1. / 24
-    pEW = 1. / 32
-    pES = 1. / 40
-    pEN = 1. / 48
-    pSN = 1. / 56
-    pSW = 1. / 64
-    pSE = 1. / 72
-    pNS = 1. / 80
-    pNE = 1. / 88
-    pNW = 1. / 96
+    pWE = 12. / 12
+    pWN = 11. / 12
+    pWS = 10. / 12
+    pEW = 9. / 12
+    pES = 8. / 12
+    pEN = 7. / 12
+    pSN = 6. / 12
+    pSW = 5. / 12
+    pSE = 4. / 12
+    pNS = 3. / 12
+    pNE = 2. / 12
+    pNW = 1. / 12
 
     pA  = 1. /30
     pB  = 2. /30
-    pC  = 1. /10
+    pC  = 3. /30
+
     with open("data/cross.rou.xml", "w") as routes:
         print("""<routes>
         <vType id="typeA" accel="0.8" decel="4.5" sigma="0.8" length="5" minGap="2.5" maxSpeed="20" guiShape="passenger/sedan "/>
@@ -73,7 +77,7 @@ def generate_routefile():
         <route id="right_up" edges="51o 1i 4o 54i" />
         <route id="right_down" edges="51o 1i 3o 53i" />
 
-        
+
         <route id="left" edges="52o 2i 1o 51i" />
         <route id="left_down" edges="52o 2i 3o 53i" />
         <route id="left_up" edges="52o 2i 4o 54i" />
@@ -89,108 +93,146 @@ def generate_routefile():
         lastVeh = 0
         vehNr = 0
         t = "typeA"
-        for i in range(N):
-            if random.uniform(0, 1) < pA:
+        for I in range(N/4):
+            i = I*4
+            tR = random.uniform(0, 1)
+            rR = random.uniform(0, 1)
+            if tR < pA:
                 t="typeA"
-            elif random.uniform(0, 1) < pB:
+            elif tR < pB:
                 t="typeB"
             else:
                 t="typeC"
-                
-            if random.uniform(0, 1) < pNW:
+
+            if rR < pNW:
                 print('    <vehicle id="down_right_%i" type="%s" route="down_right" depart="%i" />' % (
                     vehNr, t, i), file=routes)
                 vehNr += 1
                 lastVeh = i
-            if random.uniform(0, 1) < pNE:
+            elif rR < pNE:
                 print('    <vehicle id="down_left_%i" type="%s" route="down_left" depart="%i" />' % (
                     vehNr, t, i), file=routes)
                 vehNr += 1
                 lastVeh = i
-            if random.uniform(0, 1) < pNS:
+            elif rR < pNS:
                 print('    <vehicle id="down_%i" type="%s" route="down" depart="%i" />' % (
                     vehNr, t, i), file=routes)
                 vehNr += 1
                 lastVeh = i
-            if random.uniform(0, 1) < pSE:
+            elif rR < pSE:
                 print('    <vehicle id="up_right_%i" type="%s" route="up_right" depart="%i" />' % (
                     vehNr, t, i), file=routes)
                 vehNr += 1
                 lastVeh = i
-            if random.uniform(0, 1) < pSW:
+            elif rR < pSW:
                 print('    <vehicle id="up_left_%i" type="%s" route="up_left" depart="%i" />' % (
                     vehNr, t, i), file=routes)
                 vehNr += 1
                 lastVeh = i
-            if random.uniform(0, 1) < pSN:
+            elif rR < pSN:
                 print('    <vehicle id="up_%i" type="%s" route="up" depart="%i" />' % (
                     vehNr, t, i), file=routes)
                 vehNr += 1
                 lastVeh = i
-            if random.uniform(0, 1) < pEN:
+            elif rR < pEN:
                 print('    <vehicle id="left_up_%i" type="%s" route="left_up" depart="%i" />' % (
                     vehNr, t, i), file=routes)
                 vehNr += 1
                 lastVeh = i
-            if random.uniform(0, 1) < pES:
+            elif rR < pES:
                 print('    <vehicle id="left_down_%i" type="%s" route="left_down" depart="%i" />' % (
                     vehNr, t, i), file=routes)
                 vehNr += 1
                 lastVeh = i
-            if random.uniform(0, 1) < pEW:
+            elif rR < pEW:
                 print('    <vehicle id="left_%i" type="%s" route="left" depart="%i" />' % (
                     vehNr, t, i), file=routes)
                 vehNr += 1
                 lastVeh = i
-            if random.uniform(0, 1) < pWS:
+            elif rR < pWS:
                 print('    <vehicle id="right_down_%i" type="%s" route="right_down" depart="%i" />' % (
                     vehNr, t, i), file=routes)
                 vehNr += 1
                 lastVeh = i
-            if random.uniform(0, 1) < pWN:
+            elif rR < pWN:
                 print('    <vehicle id="right_up_%i" type="%s" route="right_up" depart="%i" />' % (
                     vehNr, t, i), file=routes)
                 vehNr += 1
                 lastVeh = i
-            if random.uniform(0, 1) < pWE:
+            else:
                 print('    <vehicle id="right_%i" type="%s" route="right" depart="%i" />' % (
                     vehNr, t, i), file=routes)
                 vehNr += 1
-                lastVeh = i   
+                lastVeh = i
         print("</routes>", file=routes)
-
-# The program looks like this
-#    <tlLogic id="0" type="static" programID="0" offset="0">
-# the locations of the tls are      NESW
-#        <phase duration="31" state="GrGr"/>
-#        <phase duration="6"  state="yryr"/>
-#        <phase duration="31" state="rGrG"/>
-#        <phase duration="6"  state="ryry"/>
-#    </tlLogic>
 
 
 def run():
     """execute the TraCI control loop"""
     step = 0
     # we start with phase 2 where EW has green
-    traci.trafficlights.setPhase("0", 2)
+    traci.trafficlights.setPhase("0", 0)
+
+    phase_vector = 6*[None]
+    curr_phase = traci.trafficlights.getPhase("0")
+    curr_time = 0
+
+    min_green = 10
+    max_green = 120
+    yellow = 5
+    pre = 6*[0]
+    preAction = 0
+    db_step = 100
+    avg_qL = 0
+    avg_qL_curr = 0
 
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
-        # if traci.trafficlights.getPhase("0") == 2:
-        #     # we are not already switching
-        #     if traci.inductionloop.getLastStepVehicleNumber("0") > 0:
-        #         # there is a vehicle from the north, switch
-        #         traci.trafficlights.setPhase("0", 3)
-        #     else:
-        #         # otherwise try to keep green for EW
-        #         traci.trafficlights.setPhase("0", 2)
-        num_vehicles=traci.edge.getLastStepVehicleNumber("1i")
-        print ("number of vehicles on 1st edge = " , num_vehicles )
+        edges=[]
+        queue_length=[]
+
+        lanes = traci.trafficlights.getControlledLanes("0")
+        lanes_uniq = []
+
+        i = 0;
+        while i < len(lanes):
+            if (i%2 == 0) :
+                lanes_uniq.append(lanes[i])
+            i+=1
+
+        lanes = lanes_uniq
+
+        avg_qL_curr = 0
+        for lane in lanes:
+            queue_length.append(traci.lane.getLastStepHaltingNumber(lane))
+            avg_qL_curr += traci.lane.getLastStepHaltingNumber(lane)
+
+        avg_qL_curr = avg_qL_curr/(len(lanes)*1.0)
+
+        avg_qL = (avg_qL*step + avg_qL_curr)/((step+1)*1.0)
+
+        phase_vector[0] = int(round(max(queue_length[0], queue_length[1])/15))
+        phase_vector[1] = int(round(max(queue_length[0], queue_length[5])/15))
+        phase_vector[2] = int(round(max(queue_length[4], queue_length[5])/15))
+        phase_vector[3] = int(round(max(queue_length[6], queue_length[7])/15))
+        phase_vector[4] = int(round(max(queue_length[2], queue_length[6])/15))
+        phase_vector[5] = int(round(max(queue_length[2], queue_length[3])/15))
+
+        if (step%db_step == 0) :
+            print(avg_qL, avg_qL_curr, step)
+            nextAction, pre, preAction = dbFunction(phase_vector, pre, preAction)
+            if (nextAction == 1):
+                curr_phase = (curr_phase + 1)%6
+                traci.trafficlights.setPhase("0", curr_phase)
+                curr_time = 1
+            else :
+                curr_time += 1
         step += 1
+
+    print(avg_qL, "Final")
+
     traci.close()
     sys.stdout.flush()
-
 
 def get_options():
     optParser = optparse.OptionParser()
@@ -217,5 +259,10 @@ if __name__ == "__main__":
     # this is the normal way of using traci. sumo is started as a
     # subprocess and then the python script connects and runs
     traci.start([sumoBinary, "-c", "data/cross.sumocfg",
+                             "-n", "data/cross.net.xml",
+                             "-a", "data/cross.add.xml",
+                             "--queue-output", "queue.xml",
                              "--tripinfo-output", "tripinfo.xml"])
+    init()
+    initPre()
     run()
