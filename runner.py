@@ -29,6 +29,7 @@ import subprocess
 import random
 from dbFunction import dbFunction, initPre
 from globals import init
+from randomTrips import get_options,main
 
 #from sharedFunctions import getEdgeFromLane
 
@@ -254,13 +255,21 @@ if __name__ == "__main__":
         sumoBinary = checkBinary('sumo-gui')
 
     # first, generate the route file for this simulation
-    generate_routefile()
+    # generate_routefile()
+
+    #generating route file using randomTrips.py
+    fileDir = os.path.dirname(os.path.realpath('__file__'))
+    filename = os.path.join(fileDir, 'data\cross.net.xml')
+    os.system("python randomTrips.py -n " + os.path.join(fileDir, 'data\cross.net.xml') 
+        + " --weights-prefix " + os.path.join(fileDir, 'data\cross') + " -e 200 " + " -r " + os.path.join(fileDir, 'data\cross.rou.xml'))
 
     # this is the normal way of using traci. sumo is started as a
     # subprocess and then the python script connects and runs
+
     traci.start([sumoBinary, "-c", "data/cross.sumocfg",
                              "-n", "data/cross.net.xml",
                              "-a", "data/cross.add.xml",
+                             "-r", "data/cross.rou.xml",
                              "--queue-output", "queue.xml",
                              "--tripinfo-output", "tripinfo.xml"])
     init()
