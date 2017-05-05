@@ -4,4 +4,6 @@ embedded.py
 testsuite*
 tripinfo.xml
 queue.xml
+trips.trips.xml
+cross.rou.xml
 *.pyc
