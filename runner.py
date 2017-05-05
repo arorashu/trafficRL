@@ -261,7 +261,7 @@ if __name__ == "__main__":
     fileDir = os.path.dirname(os.path.realpath('__file__'))
     filename = os.path.join(fileDir, 'data\cross.net.xml')
     os.system("python randomTrips.py -n " + os.path.join(fileDir, 'data\cross.net.xml') 
-        + " --weights-prefix " + os.path.join(fileDir, 'data\cross') + " -e 50000 " + " -r " + os.path.join(fileDir, 'data\cross.rou.xml'))
+        + " --weights-prefix " + os.path.join(fileDir, 'data\cross') + " -e 50000 -p  4" + " -r " + os.path.join(fileDir, 'data\cross.rou.xml'))
 
     # this is the normal way of using traci. sumo is started as a
     # subprocess and then the python script connects and runs
