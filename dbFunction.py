@@ -19,7 +19,7 @@ qValues = db['qValues']
 
 def initPre():
     temp = []
-    for i in range(0, globals.numActions+1):
+    for i in range(0, globals.numActions):
         temp.append({"state":   globals.pre,
                     "action":   i,
                     "qVal":     0,
@@ -30,7 +30,7 @@ def dbFunction(curr, pre, preAction):
     currBSON = qValues.find({"state": curr})
     temp = []
     if (currBSON.count() == 0):
-        for i in range(0, globals.numActions+1):
+        for i in range(0, globals.numActions):
             temp.append({"state":   curr,
                         "action":   i,
                         "qVal":     0,
