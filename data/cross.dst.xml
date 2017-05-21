@@ -1,8 +1,12 @@
 <edgedata>
    <interval begin="0" end="10"/>
-     <edge id="51i" value="0.25"/>
-     <edge id="52i" value="0.25"/>
-     <edge id="53i" value="0.25"/>
-     <edge id="54i" value="0.25"/>
+     <edge id="gneE0" value="0.125"/>
+     <edge id="gneE3" value="0.125"/>
+     <edge id="gneE5" value="0.125"/>
+     <edge id="gneE7" value="0.125"/>
+     <edge id="gneE10" value="0.125"/>
+     <edge id="gneE13" value="0.125"/>
+     <edge id="gneE15" value="0.125"/>
+     <edge id="gneE17" value="0.125"/>
    </interval>
  </edgedata>

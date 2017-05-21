@@ -111,7 +111,7 @@ def generate_routefile(options):
     #generating route file using randomTrips.py
     fileDir = os.path.dirname(os.path.realpath('__file__'))
     print(str(options.numberCars))
-    filename = os.path.join(fileDir, 'data/cross.net.xml')
+    filename = os.path.join(fileDir, 'data/cross_single.net.xml')
     os.system("python randomTrips.py -n " + filename
         + " --weights-prefix " + os.path.join(fileDir, 'data/cross') + " -e " + str(options.numberCars)
         + " -p  4" + " -r " + os.path.join(fileDir, 'data/cross.rou.xml'))
@@ -134,7 +134,6 @@ if __name__ == "__main__":
     # Sumo is started as a subprocess and then the python script connects and runs
     traci.start([sumoBinary, "-c", "data/cross.sumocfg",
                              "-n", "data/cross.net.xml",
-                             "-a", "data/cross.add.xml",
                              "-r", "data/cross.rou.xml",
                              "--queue-output", "queue.xml",
                              "--tripinfo-output", "tripinfo.xml"])
