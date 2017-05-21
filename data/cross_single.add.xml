@@ -1,5 +1,5 @@
 <additional>
-        <tlLogic id="0" type="static" programID="my_program" offset="0">
+	   <tlLogic id="0" type="static" programID="my_program" offset="0">
         <phase duration="100" state="grrrgrrrGGGGgrrr"/>
         <phase duration="100" state= "gGGrgrrrgGGrgrrr"/>
         <phase duration="100" state= "GGGGgrrrgrrrgrrr"/>
@@ -7,4 +7,5 @@
         <phase duration="100" state="grrrgGGrgrrrgGGr"/>
         <phase duration="100" state="grrrgrrrgrrrGGGG"/>
     </tlLogic>
+
 </additional>

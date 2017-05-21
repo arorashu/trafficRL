@@ -123,7 +123,7 @@ def get_options():
     optParser = optparse.OptionParser()
     optParser.add_option("--nogui", action="store_true",
                          default=False, help="run the commandline version of sumo")
-    optParser.add_option("--cars", dest="numberCars", default=2000, metavar="NUM",
+    optParser.add_option("--cars", dest="numberCars", default=50000, metavar="NUM",
                          help="specify the number of cars generated for simulation")
     optParser.add_option("--qlBracket", dest="qlBracket", default=10, metavar="BRACKET",
                          help="specify the number with which to partition the range of queue length")
@@ -158,6 +158,7 @@ if __name__ == "__main__":
     # Sumo is started as a subprocess and then the python script connects and runs
     traci.start([sumoBinary, "-c", "data/cross.sumocfg",
                              "-n", "data/cross.net.xml",
+                             "-a", "data/cross.add.xml",
                              "-r", "data/cross.rou.xml",
                              "--queue-output", "queue.xml",
                              "--tripinfo-output", "tripinfo.xml"])
