@@ -8,8 +8,6 @@ import pprint
 client = MongoClient()
 db = client['test']
 
-qValues = db['qValues']
-
 # q = {"state":   "list",
 #     "action":   0,
 #     "qVal":     0,
@@ -17,7 +15,10 @@ qValues = db['qValues']
 
 # For fixed phasing
 
-def initPre():
+def initPre(ID):
+    # if (qValues.find_one({"state": globals.pre})):
+    #     return
+    qValues = db['qValues' + ID]
     temp = []
     for i in range(0, globals.numActions+1):
         temp.append({"state":   globals.pre,
@@ -26,7 +27,9 @@ def initPre():
                     "visits":   1})
     qValues.insert_many(temp)
 
-def dbFunction(curr, pre, preAction):
+def dbFunction(curr, ID):
+    qValues = db['qValues' + ID]
+    initPre(ID)
     currBSON = qValues.find({"state": curr})
     temp = []
     if (currBSON.count() == 0):
@@ -39,9 +42,10 @@ def dbFunction(curr, pre, preAction):
         currBSON = temp
     # TO-DO: visits to be updated
 
-    reward = queueBalanceReward(pre, curr, globals.N)
+    reward = queueBalanceReward(globals.pre, curr, globals.N)
 
-    currQ = qValues.find_one({"state":  pre, "action":   preAction})['qVal']
+    # print(globals.pre, globals.preAction)
+    currQ = qValues.find_one({"state":  globals.pre, "action":   globals.preAction})['qVal']
 
     tempBSON = []
     for c in currBSON:
@@ -54,7 +58,7 @@ def dbFunction(curr, pre, preAction):
 
     newQ = qLearning(currQ, globals.alpha, globals.gamma, reward, nextMaxQ)
 
-    qValues.find_one_and_update({"state": pre, "action": preAction}, {'$set': {"qVal": newQ}})
+    qValues.find_one_and_update({"state": globals.pre, "action": globals.preAction}, {'$set': {"qVal": newQ}})
 
     currBSON = qValues.find({"state": curr})
 
@@ -70,5 +74,7 @@ def dbFunction(curr, pre, preAction):
     nextAction = eGreedy(globals.numActions, globals.E, globals.age, greedyAction)
 
     globals.age += 1
-    newc = curr[:]
-    return nextAction, newc, nextAction
+    globals.pre = curr[:]
+    globals.preAction = nextAction
+
+    return nextAction
