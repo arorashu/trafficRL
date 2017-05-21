@@ -9,8 +9,9 @@ import sys
 import optparse
 import subprocess
 import random
-from dbFunction import dbFunction
+from dbFunction import dbFunction, initTrafficLight, initRunCount
 from globals import init
+from pymongo import MongoClient
 
 # we need to import python modules from the $SUMO_HOME/tools directory
 try:
@@ -26,14 +27,26 @@ except ImportError:
 import traci
 
 def run(options):
+       
+    run_id = initRunCount()
+    stats = []
+    temp_stats = []
+    temp = []
     # execute the TraCI control loop
     step = 0
+
+    client = MongoClient()
+    db = client['trafficLight']
 
     trafficLights = traci.trafficlights.getIDList()
 
     for ID in trafficLights:
         # we set every light to phase 0
         traci.trafficlights.setPhase(ID, 0)
+        initTrafficLight(ID)
+        stats.append(temp)
+        temp_stats.append(temp)
+        stats[int(ID)] = db['stats' + ID]
 
     phase_vector = 6*[None]
     curr_phase = traci.trafficlights.getPhase("0")
@@ -44,13 +57,16 @@ def run(options):
     db_step = 100
     avg_qL = 0
     avg_qL_curr = 0
-
+    #temp_stats = []
+    
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
 
         for ID in trafficLights:
             edges=[]
             queue_length=[]
+            
+
 
             lanes = traci.trafficlights.getControlledLanes(ID)
             lanes_uniq = []
@@ -80,6 +96,10 @@ def run(options):
 
             if (step%db_step == 0) :
                 print(avg_qL, avg_qL_curr, step)
+                temp_stats[int(ID)].append({"step": step,
+                            "curr_qL": avg_qL_curr,
+                            "avg_qL": avg_qL})
+
                 nextAction = dbFunction(phase_vector, ID)
                 if (nextAction == 1):
                     curr_phase = (curr_phase + 1)%6
@@ -87,10 +107,18 @@ def run(options):
                     curr_time = 1
                 else :
                     curr_time += 1
+
+            
         step += 1
 
     print(avg_qL, "Final")
-
+    
+    for ID in trafficLights:
+        id = int(ID)
+        run_stats = []
+        run_stats.append({"run_id": run_id, "data": temp_stats[id]})
+        stats[id].insert_many(run_stats)
+    
     traci.close()
     sys.stdout.flush()
 
