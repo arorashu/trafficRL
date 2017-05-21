@@ -1,5 +1,6 @@
 embedded/
 plain/
+data/mylog.txt
 embedded.py
 testsuite*
 tripinfo.xml
