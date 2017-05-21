@@ -38,6 +38,22 @@ def initRunCount():
     run_count = nor.find_one()['count']
     return run_count
 
+def getRunCount():
+    nor = db['noOfRuns']
+    run_count = nor.find_one()['count']
+    return run_count
+
+
+def saveStats( traffic_light_count, temp_stats ):
+    run_id = getRunCount()
+    stats = []
+    temp = []
+    for id in range(traffic_light_count):
+        stats.append(temp)
+        stats[id] = db['stats' + str(id)]
+        run_stats = []
+        run_stats.append({"run_id": run_id, "data": temp_stats[id]})
+        stats[id].insert_many(run_stats)
 
 def dbFunction(curr, ID):
     qValues = db['qValues' + ID]

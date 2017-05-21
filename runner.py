@@ -9,9 +9,9 @@ import sys
 import optparse
 import subprocess
 import random
-from dbFunction import dbFunction, initTrafficLight, initRunCount
+from dbFunction import dbFunction, initTrafficLight, initRunCount, saveStats
 from globals import init
-from pymongo import MongoClient
+
 
 # we need to import python modules from the $SUMO_HOME/tools directory
 try:
@@ -29,24 +29,17 @@ import traci
 def run(options):
        
     run_id = initRunCount()
-    stats = []
     temp_stats = []
     temp = []
     # execute the TraCI control loop
     step = 0
-
-    client = MongoClient()
-    db = client['trafficLight']
-
     trafficLights = traci.trafficlights.getIDList()
 
     for ID in trafficLights:
         # we set every light to phase 0
         traci.trafficlights.setPhase(ID, 0)
         initTrafficLight(ID)
-        stats.append(temp)
         temp_stats.append(temp)
-        stats[int(ID)] = db['stats' + ID]
 
     phase_vector = 6*[None]
     curr_phase = traci.trafficlights.getPhase("0")
@@ -112,12 +105,7 @@ def run(options):
         step += 1
 
     print(avg_qL, "Final")
-    
-    for ID in trafficLights:
-        id = int(ID)
-        run_stats = []
-        run_stats.append({"run_id": run_id, "data": temp_stats[id]})
-        stats[id].insert_many(run_stats)
+    saveStats(len(trafficLights), temp_stats)
     
     traci.close()
     sys.stdout.flush()
