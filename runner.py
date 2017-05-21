@@ -95,6 +95,7 @@ def run(options):
 
                 # print and save current stats
                 print(avg_qL, avg_qL_curr, step)
+                print(ID)
                 temp_stats[int(ID)].append({"step": step,
                                             "curr_qL": avg_qL_curr,
                                             "avg_qL": avg_qL})
@@ -134,7 +135,7 @@ def generate_routefile(options):
     #generating route file using randomTrips.py
     fileDir = os.path.dirname(os.path.realpath('__file__'))
     print(str(options.numberCars))
-    filename = os.path.join(fileDir, 'data/cross_single.net.xml')
+    filename = os.path.join(fileDir, 'data/cross.net.xml')
     os.system("python randomTrips.py -n " + filename
         + " --weights-prefix " + os.path.join(fileDir, 'data/cross') + " -e " + str(options.numberCars)
         + " -p  4" + " -r " + os.path.join(fileDir, 'data/cross.rou.xml'))
