@@ -6,7 +6,7 @@ import globals
 import pprint
 
 client = MongoClient()
-db = client['test']
+db = client['trafficLight']
 
 # q = {"state":   "list",
 #     "action":   0,
@@ -15,9 +15,8 @@ db = client['test']
 
 # For fixed phasing
 
-def initPre(ID):
-    # if (qValues.find_one({"state": globals.pre})):
-    #     return
+def initTrafficLight(ID):
+    
     qValues = db['qValues' + ID]
     temp = []
     for i in range(0, globals.numActions+1):
@@ -27,9 +26,38 @@ def initPre(ID):
                     "visits":   1})
     qValues.insert_many(temp)
 
+
+def initRunCount():
+    #noOfRuns to store run statistics
+    nor = db['noOfRuns']
+    if ( nor.count() == 0 ):
+        nor.insert_one({"count" : 0});
+    else:
+        nor.update_one({}, {'$inc':{'count':1}})
+
+    run_count = nor.find_one()['count']
+    return run_count
+
+def getRunCount():
+    nor = db['noOfRuns']
+    run_count = nor.find_one()['count']
+    return run_count
+
+
+def saveStats( traffic_light_count, temp_stats ):
+    run_id = getRunCount()
+    stats = []
+    temp = []
+    for id in range(traffic_light_count):
+        stats.append(temp)
+        stats[id] = db['stats' + str(id)]
+        run_stats = []
+        run_stats.append({"run_id": run_id, "data": temp_stats[id]})
+        stats[id].insert_many(run_stats)
+
 def dbFunction(curr, ID):
     qValues = db['qValues' + ID]
-    initPre(ID)
+    #initPre(ID)
     currBSON = qValues.find({"state": curr})
     temp = []
     if (currBSON.count() == 0):
