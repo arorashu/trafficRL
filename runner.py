@@ -27,86 +27,93 @@ except ImportError:
 import traci
 
 def run(options):
-       
+
     run_id = initRunCount()
     temp_stats = []
     temp = []
-    # execute the TraCI control loop
-    step = 0
-    trafficLights = traci.trafficlights.getIDList()
 
+    # get list of traffic lights
+    trafficLights = traci.trafficlights.getIDList()
+    trafficLightsNumber = traci.trafficlights.getIDCount()
+
+    # we set every light to phase 0
     for ID in trafficLights:
-        # we set every light to phase 0
         traci.trafficlights.setPhase(ID, 0)
         initTrafficLight(ID)
         temp_stats.append(temp)
 
     phase_vector = 6*[None]
-    curr_phase = traci.trafficlights.getPhase("0")
+    curr_phase = trafficLightsNumber*[0]
     curr_time = 0
-
-    pre = 6*[0]
-    preAction = 0
     db_step = 100
     avg_qL = 0
     avg_qL_curr = 0
     #temp_stats = []
-    
+
+    # execute the TraCI control loop
+    step = 0
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
 
+        # current phase index number
+        i = 0
         for ID in trafficLights:
-            edges=[]
-            queue_length=[]
-            
 
-
+            # get lanes for each traffic light
             lanes = traci.trafficlights.getControlledLanes(ID)
             lanes_uniq = []
-
-            i = 0
-            while i < len(lanes):
-                if (i%2 == 0):
-                    lanes_uniq.append(lanes[i])
-                i+=1
-
+            j = 0
+            while j < len(lanes):
+                if (j%2 == 0):
+                    lanes_uniq.append(lanes[j])
+                j+=1
             lanes = lanes_uniq
 
+
+            # get average queue length for current time step
+            queue_length=[]
             avg_qL_curr = 0
             for lane in lanes:
                 queue_length.append(traci.lane.getLastStepHaltingNumber(lane))
                 avg_qL_curr += traci.lane.getLastStepHaltingNumber(lane)
-
             avg_qL_curr = avg_qL_curr/(len(lanes)*1.0)
+
+
+            # get average queue length till now
             avg_qL = (avg_qL*step + avg_qL_curr)/((step+1)*1.0)
 
-            phase_vector[0] = int(round(max(queue_length[0], queue_length[1])/options.qlBracket))
-            phase_vector[1] = int(round(max(queue_length[0], queue_length[5])/options.qlBracket))
-            phase_vector[2] = int(round(max(queue_length[4], queue_length[5])/options.qlBracket))
-            phase_vector[3] = int(round(max(queue_length[6], queue_length[7])/options.qlBracket))
-            phase_vector[4] = int(round(max(queue_length[2], queue_length[6])/options.qlBracket))
-            phase_vector[5] = int(round(max(queue_length[2], queue_length[3])/options.qlBracket))
-
+            # run only for every db_step
             if (step%db_step == 0) :
+
+                # generate current step's phase vector
+                phase_vector[0] = int(round(max(queue_length[0], queue_length[1])/options.qlBracket))
+                phase_vector[1] = int(round(max(queue_length[0], queue_length[5])/options.qlBracket))
+                phase_vector[2] = int(round(max(queue_length[4], queue_length[5])/options.qlBracket))
+                phase_vector[3] = int(round(max(queue_length[6], queue_length[7])/options.qlBracket))
+                phase_vector[4] = int(round(max(queue_length[2], queue_length[6])/options.qlBracket))
+                phase_vector[5] = int(round(max(queue_length[2], queue_length[3])/options.qlBracket))
+
+                # print and save current stats
                 print(avg_qL, avg_qL_curr, step)
                 temp_stats[int(ID)].append({"step": step,
-                            "curr_qL": avg_qL_curr,
-                            "avg_qL": avg_qL})
+                                            "curr_qL": avg_qL_curr,
+                                            "avg_qL": avg_qL})
 
                 nextAction = dbFunction(phase_vector, ID)
                 if (nextAction == 1):
-                    curr_phase = (curr_phase + 1)%6
-                    traci.trafficlights.setPhase(ID, curr_phase)
+                    curr_phase[i] = (curr_phase[i] + 1)%6
+                    traci.trafficlights.setPhase(ID, curr_phase[i])
                     curr_time = 1
                 else :
                     curr_time += 1
 
-            
+            # incremetn current phase index
+            i+=1
         step += 1
 
     print(avg_qL, "Final")
-    saveStats(len(trafficLights), temp_stats)
-    
+    saveStats(trafficLightsNumber, temp_stats)
+
     traci.close()
     sys.stdout.flush()
 
