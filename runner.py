@@ -136,7 +136,7 @@ def get_options():
     optParser = optparse.OptionParser()
     optParser.add_option("--nogui", action="store_true",
                          default=False, help="run the commandline version of sumo")
-    optParser.add_option("--cars", "-C", dest="numberCars", default=2000, metavar="NUM",
+    optParser.add_option("--cars", "-C", dest="numberCars", default=20000, metavar="NUM",
                          help="specify the number of cars generated for simulation")
     optParser.add_option("--qlBracket", dest="qlBracket", default=10, metavar="BRACKET",
                          help="specify the number with which to partition the range of queue length")
