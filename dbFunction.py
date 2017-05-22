@@ -20,7 +20,7 @@ def initTrafficLight(ID):
     pre = 6*[0]
     qValues = db['qValues' + ID]
     temp = []
-    for i in range(0, globals.numActions+1):
+    for i in range(0, globals.numActions):
         temp.append({"state":   pre,
                     "action":   i,
                     "qVal":     0,
@@ -61,7 +61,7 @@ def dbFunction(curr, pre, preAction, age, ID):
     currBSON = qValues.find({"state": curr})
     temp = []
     if (currBSON.count() == 0):
-        for i in range(0, globals.numActions+1):
+        for i in range(0, globals.numActions):
             temp.append({"state":   curr,
                         "action":   i,
                         "qVal":     0,

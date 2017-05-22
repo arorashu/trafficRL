@@ -3,5 +3,5 @@ def init():
     N = 6
     E = 0.05
     gamma = 0.8
-    numActions = 1
+    numActions = 2
     alpha = 0.5

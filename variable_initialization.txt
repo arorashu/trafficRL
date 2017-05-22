@@ -5,10 +5,10 @@ GLOBAL VALUES INITIALIZATION:
 	gamma = 0.8
 	age = 0
 	numActions =
-            fixed phasing	:	1 (where 0 = same phase, 1 = next phase)
-            variable phasing:	N-1 (if indexing of phases starts from 0, else N)
+            fixed phasing	:	2 (where 0 = same phase, 1 = next phase)
+            variable phasing:	N (if indexing of phases starts from 0, else N)
     
-    pre = (0,0,0,0,0,0,0,0)				#intitial state - all queue lengths zero, start with phase 0 and initially duration of phase is 0
+    pre = N*[0]				#intitial state - all queue lengths zero, start with phase 0 and initially duration of phase is 0
     preAction = 0						#continue in phase 0 for some time
 	alpha = 
 
