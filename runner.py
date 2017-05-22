@@ -9,6 +9,7 @@ import sys
 import optparse
 import subprocess
 import random
+from pymongo import MongoClient
 from dbFunction import dbFunction, initTrafficLight, initRunCount, saveStats
 from globals import init
 
@@ -27,7 +28,6 @@ except ImportError:
 import traci
 
 def run(options):
-
     initRunCount()
     tempStats = []
     temp = []
@@ -43,7 +43,6 @@ def run(options):
         tempStats.append(temp)
 
     phaseVector = 6*[None]
-    ages = trafficLightsNumber*[0]
     prePhase = trafficLightsNumber*[phaseVector]
     preAction = trafficLightsNumber*[0]
     currPhase = trafficLightsNumber*[0]
@@ -51,6 +50,17 @@ def run(options):
     dbStep = 100
     avgQL = trafficLightsNumber*[0]
     avgQLCurr = trafficLightsNumber*[0]
+    ages = trafficLightsNumber*[0]
+
+    # get age value from DB
+    client = MongoClient()
+    db = client['trafficLight']
+    i = 0
+    for ID in trafficLights:
+        qValues = db['qValues' + ID]
+        if (qValues.find({"ageExists": True}).count() != 0):
+            ages[i] = qValues.find_one({"ageExists": True})['age']
+        i+=1
 
     # execute the TraCI control loop
     step = 0
@@ -103,9 +113,12 @@ def run(options):
                                             "ID": ID})
 
                 nextAction = dbFunction(phaseVector, prePhase[i], preAction[i], ages[i], ID)
+
+                # update values
                 ages[i] += 1
                 prePhase[i] = phaseVector[:]
                 preAction[i] = nextAction
+
                 if (nextAction == 1):
                     currPhase[i] = (currPhase[i] + 1)%6
                     traci.trafficlights.setPhase(ID, currPhase[i])
@@ -117,6 +130,14 @@ def run(options):
             i+=1
         step += 1
 
+    # update age in DB
+    i = 0
+    for ID in trafficLights:
+        qValues = db['qValues' + ID]
+        qValues.find_one_and_update({"ageExists": True}, {"$set": {"age": ages[i]}}, upsert=True)
+        i+=1
+
+    # print final average
     avgQLTotal = 0
     i = 0
     for avgQLC in avgQL:
