@@ -28,7 +28,7 @@ import traci
 
 def run(options):
 
-    runID = initRunCount()
+    initRunCount()
     tempStats = []
     temp = []
 
