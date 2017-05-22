@@ -4,7 +4,7 @@ def init():
     E = 0.05
     gamma = 0.8
     age = 0
-    numActions = 2      #2 for fixed phsing, N for variable phasing
+    numActions = 2      #2 for fixed phasing, N for variable phasing
     pre = 6*[0]
     preAction = 0
     alpha = 0.5
