@@ -1,10 +1,7 @@
 def init():
-    global N, E, alpha, gamma, age, pre, preAction, numActions
+    global N, E, alpha, gamma, numActions
     N = 6
     E = 0.05
     gamma = 0.8
-    age = 0
-    numActions = 2      #2 for fixed phasing, N for variable phasing
-    pre = 6*[0]
-    preAction = 0
+    numActions = 1
     alpha = 0.5

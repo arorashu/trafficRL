@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netgenerateConfiguration.xsd">
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
-        <net-file value="cross.net.xml"/>
+        <net-file value="cross_single.net.xml"/>
         <route-files value="cross.rou.xml"/>
+        <additional-files value="cross.det.xml"/>
     </input>
 
     <time>
@@ -14,7 +15,6 @@
     <report>
         <duration-log.statistics value="true"/>
         <no-step-log value="true"/>
-        <log value="mylog.txt"/>
     </report>
 
 </configuration>

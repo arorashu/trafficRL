@@ -5,6 +5,7 @@ from queueBalanceReward import queueBalanceReward
 import globals
 import pprint
 
+pp = pprint.PrettyPrinter(indent=4)
 client = MongoClient()
 db = client['trafficLight']
 
@@ -16,11 +17,11 @@ db = client['trafficLight']
 # For fixed phasing
 
 def initTrafficLight(ID):
-    
+    pre = 6*[0]
     qValues = db['qValues' + ID]
     temp = []
-    for i in range(0, globals.numActions):
-        temp.append({"state":   globals.pre,
+    for i in range(0, globals.numActions+1):
+        temp.append({"state":   pre,
                     "action":   i,
                     "qVal":     0,
                     "visits":   1})
@@ -55,9 +56,8 @@ def saveStats( traffic_light_count, temp_stats ):
         run_stats.append({"run_id": run_id, "data": temp_stats[id]})
         stats[id].insert_many(run_stats)
 
-def dbFunction(curr, ID):
+def dbFunction(curr, pre, preAction, age, ID):
     qValues = db['qValues' + ID]
-    #initPre(ID)
     currBSON = qValues.find({"state": curr})
     temp = []
     if (currBSON.count() == 0):
@@ -70,10 +70,9 @@ def dbFunction(curr, ID):
         currBSON = temp
     # TO-DO: visits to be updated
 
-    reward = queueBalanceReward(globals.pre, curr, globals.N)
+    reward = queueBalanceReward(pre, curr, globals.N)
 
-    # print(globals.pre, globals.preAction)
-    currQ = qValues.find_one({"state":  globals.pre, "action":   globals.preAction})['qVal']
+    currQ = qValues.find_one({"state":  pre, "action":   preAction})['qVal']
 
     tempBSON = []
     for c in currBSON:
@@ -86,7 +85,7 @@ def dbFunction(curr, ID):
 
     newQ = qLearning(currQ, globals.alpha, globals.gamma, reward, nextMaxQ)
 
-    qValues.find_one_and_update({"state": globals.pre, "action": globals.preAction}, {'$set': {"qVal": newQ}})
+    qValues.find_one_and_update({"state": pre, "action": preAction}, {'$set': {"qVal": newQ}})
 
     currBSON = qValues.find({"state": curr})
 
@@ -99,10 +98,5 @@ def dbFunction(curr, ID):
 
     # nextAction = 0 or 1 (0 = continue same phase, 1 = go to next phase)
     # i.e. index of next phase = (currPhaseIndex + action) % N
-    nextAction = eGreedy(globals.numActions, globals.E, globals.age, greedyAction)
-
-    globals.age += 1
-    globals.pre = curr[:]
-    globals.preAction = nextAction
-
+    nextAction = eGreedy(globals.numActions, globals.E, age, greedyAction)
     return nextAction

@@ -1,0 +1,62 @@
+***Starting server on port 51673 ***
+Loading net-file from 'data/cross.net.xml'... done (53ms).
+Warning: Missing yellow phase in tlLogic '0', program '0' for tl-index 13 when switching to phase 1
+Warning: Missing yellow phase in tlLogic '1', program '0' for tl-index 13 when switching to phase 1
+Warning: Missing yellow phase in tlLogic '2', program '0' for tl-index 13 when switching to phase 1
+Warning: Missing yellow phase in tlLogic '3', program '0' for tl-index 13 when switching to phase 1
+Loading done.
+Simulation started with time: 0.00
+Warning: Teleporting vehicle '14'; waited too long (yield), lane='gneE18_1', time=391.00.
+Warning: Vehicle '14' ends teleporting on edge 'gneE15', time 391.00.
+Warning: Teleporting vehicle '11'; waited too long (yield), lane='0/1to0/0_0', time=408.00.
+Warning: Vehicle '11' ends teleporting on edge 'gneE15', time 408.00.
+Warning: Teleporting vehicle '19'; waited too long (yield), lane='gneE2_0', time=411.00.
+Warning: Vehicle '19' ends teleporting on edge '0/1to1/1', time 411.00.
+Warning: Teleporting vehicle '9'; waited too long (yield), lane='0/1to0/0_0', time=430.00.
+Warning: Vehicle '9' ends teleporting on edge 'gneE15', time 430.00.
+Warning: Teleporting vehicle '24'; waited too long (yield), lane='gneE2_1', time=431.00.
+Warning: Vehicle '24' ends teleporting on edge '0/1to0/0', time 431.00.
+Warning: Teleporting vehicle '34'; waited too long (yield), lane='gneE4_0', time=471.00.
+Warning: Vehicle '34' ends teleporting on edge '0/1to0/0', time 471.00.
+Warning: Teleporting vehicle '44'; waited too long (yield), lane='gneE16_0', time=511.00.
+Warning: Vehicle '44' ends teleporting on edge '0/0to0/1', time 511.00.
+Warning: Teleporting vehicle '46'; waited too long (yield), lane='gneE8_1', time=519.00.
+Warning: Vehicle '46' ends teleporting on edge '1/1to0/1', time 519.00.
+Warning: Teleporting vehicle '56'; waited too long (yield), lane='gneE4_1', time=557.00.
+Warning: Vehicle '56' ends teleporting on edge 'gneE3', time 557.00.
+Warning: Teleporting vehicle '59'; waited too long (yield), lane='gneE16_1', time=571.00.
+Warning: Vehicle '59' ends teleporting on edge 'gneE15', time 571.00.
+Warning: Teleporting vehicle '70'; waited too long (yield), lane='gneE11_1', time=615.00.
+Warning: Vehicle '70' ends teleporting on edge '1/0to1/1', time 615.00.
+Warning: Teleporting vehicle '71'; waited too long (yield), lane='gneE14_1', time=619.00.
+Warning: Vehicle '71' ends teleporting on edge 'gneE13', time 619.00.
+Warning: Teleporting vehicle '67'; waited too long (yield), lane='1/0to0/0_1', time=633.00.
+Warning: Vehicle '67' ends teleporting on edge '0/0to0/1', time 633.00.
+Warning: Teleporting vehicle '99'; waited too long (yield), lane='gneE11_0', time=730.00.
+Warning: Vehicle '99' ends teleporting on edge '1/0to0/0', time 730.00.
+Warning: Teleporting vehicle '105'; waited too long (yield), lane='gneE4_0', time=795.00.
+Warning: Vehicle '105' ends teleporting on edge '0/1to0/0', time 795.00.
+Warning: Teleporting vehicle '134'; waited too long (yield), lane='gneE18_0', time=870.00.
+Warning: Vehicle '134' ends teleporting on edge '0/0to1/0', time 870.00.
+Warning: Teleporting vehicle '140'; waited too long (yield), lane='gneE9_0', time=895.00.
+Warning: Vehicle '140' ends teleporting on edge '1/1to0/1', time 895.00.
+Warning: Teleporting vehicle '141'; waited too long (yield), lane='gneE9_1', time=900.00.
+Warning: Vehicle '141' ends teleporting on edge 'gneE7', time 900.00.
+Error: tcpip::Socket::recvAndCheck @ recv: Socket reset by peer
+Quitting (on error).
+Performance: 
+ Duration: 59719ms
+ Real time factor: 15.0873
+ UPS: 953.934259
+Vehicles: 
+ Inserted: 226 (Loaded: 257)
+ Running: 100
+ Waiting: 0
+Teleports: 18 (Yield: 18)
+Statistics (avg):
+ RouteLength: 1067.02
+ Duration: 239.43
+ WaitingTime: 147.63
+ TimeLoss: 162.09
+ DepartDelay: 0.00
+
