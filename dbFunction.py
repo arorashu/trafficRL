@@ -36,9 +36,6 @@ def initRunCount():
     else:
         nor.update_one({}, {'$inc':{'count':1}})
 
-    run_count = nor.find_one()['count']
-    return run_count
-
 def getRunCount():
     nor = db['noOfRuns']
     run_count = nor.find_one()['count']

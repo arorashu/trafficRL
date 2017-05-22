@@ -28,7 +28,7 @@ import traci
 
 def run(options):
 
-    runID = initRunCount()
+    initRunCount()
     tempStats = []
     temp = []
 
@@ -140,6 +140,7 @@ def get_options():
                          help="specify the number of cars generated for simulation")
     optParser.add_option("--qlBracket", dest="qlBracket", default=10, metavar="BRACKET",
                          help="specify the number with which to partition the range of queue length")
+    optParser.add_option("--lateral-resolution", default=1.0, help="parameter for sublane model")
     options, args = optParser.parse_args()
     return options
 
