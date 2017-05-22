@@ -136,11 +136,7 @@ def get_options():
     optParser = optparse.OptionParser()
     optParser.add_option("--nogui", action="store_true",
                          default=False, help="run the commandline version of sumo")
-<<<<<<< HEAD
-    optParser.add_option("--cars", "-C", dest="numberCars", default=50000, metavar="NUM",
-=======
     optParser.add_option("--cars", "-C", dest="numberCars", default=20000, metavar="NUM",
->>>>>>> a599f9d87a7f2af975d21764eb4c5780df05e0ed
                          help="specify the number of cars generated for simulation")
     optParser.add_option("--qlBracket", dest="qlBracket", default=10, metavar="BRACKET",
                          help="specify the number with which to partition the range of queue length")
@@ -152,11 +148,14 @@ def get_options():
 def generate_routefile(options):
     #generating route file using randomTrips.py
     fileDir = os.path.dirname(os.path.realpath('__file__'))
-    print(str(options.numberCars))
     filename = os.path.join(fileDir, 'data/cross.net.xml')
     os.system("python randomTrips.py -n " + filename
         + " --weights-prefix " + os.path.join(fileDir, 'data/cross') + " -e " + str(options.numberCars)
-        + " -p  4" + " -r " + os.path.join(fileDir, 'data/cross.rou.xml'))
+        + " -p  4" + " -r " + os.path.join(fileDir, 'data/cross.rou.xml')
+        + " --trip-attributes=\"type=\"'typedist1'\"\"" 
+        + " --additional-file "  +  os.path.join(fileDir, 'data/type.add.xml')
+        + " --edge-permission emergency passenger taxi bus truck motorcycle bicycle"
+        )
 
 
 # this is the main entry point of this script
