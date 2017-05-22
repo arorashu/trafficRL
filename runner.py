@@ -102,7 +102,7 @@ def run(options):
                                             "avgQL": avgQL[i],
                                             "ID": ID})
 
-                nextAction = dbFunction(phaseVector, prePhase[i], preAction[i], ages[i], ID)
+                nextAction = dbFunction(phaseVector, prePhase[i], preAction[i], ages[i], ID, options)
                 ages[i] += 1
                 prePhase[i] = phaseVector[:]
                 preAction[i] = nextAction
@@ -140,6 +140,14 @@ def get_options():
                          help="specify the number of cars generated for simulation")
     optParser.add_option("--qlBracket", dest="qlBracket", default=10, metavar="BRACKET",
                          help="specify the number with which to partition the range of queue length")
+    optParser.add_option("--learning", dest="learn", default='1', metavar="NUM", choices= ['1', '2'],
+                         help="specify learning method (1 = Q-Learning, 2 = SARSA)")
+    optParser.add_option("--state", dest="stateRep", default='1', metavar="NUM", choices= ['1', '2'],
+                         help="specify traffic state representation to be used (1 = Queue Length, 2 = Cumulative Delay)")
+    optParser.add_option("--phasing", dest="phasing", default='1', metavar="NUM", choices= ['1', '2'],
+                         help="specify phasing scheme (1 = Fixed Phasing, 2 = Variable Phasing)")
+    optParser.add_option("--action", dest="actionSel", default='1', metavar="NUM", choices= ['1', '2'],
+                         help="specify action selection method (1 = epsilon greedy, 2 = softmax)")
     options, args = optParser.parse_args()
     return options
 

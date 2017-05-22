@@ -1,12 +1,21 @@
-def qLearning(currQ, alpha, gamma, reward, nextMaxQ):
-    """Returns value to be updated as Q value of (st,at)
-    alpha = learning rate (can be const. or variable)
+""" Returns value to be updated as Q value of (st,at) i.e. (pre, preAction)
+    alpha = learning rate
     gamma = discount factor
     reward = from getReward function
-    nextMaxQ =  max possible reward from next step i.e. max over Q of (st+1, at+1)
-                scan DB for next possible actions of curr state and find nextMaxQ
+"""
+def qLearning(currQ, alpha, gamma, reward, nextMaxQ):
+    """ nextMaxQ =   max possible reward from next step i.e. max over Q of (st+1, at+1)
+        scan DB for next possible actions of curr state and find nextMaxQ
     """
     newQ = currQ + alpha*(reward + gamma*nextMaxQ - currQ)
+    #update currQ to newQ in DB
+    return newQ
+
+def sarsa(currQ, alpha, gamma, reward, nextQ):
+    """ nextQ = Q(curr, nextAction)
+                where nextAction is selected according to policy - eGreedy or softmax
+    """
+    newQ = currQ + alpha*(reward + gamma*nextQ - currQ)
     #update currQ to newQ in DB
     return newQ
 
