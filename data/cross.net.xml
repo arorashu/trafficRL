@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 21-05-2017 19:43:34 by Netedit Version 0.29.0
+<!-- generated on 23-05-2017 17:22:55 by Netedit Version 0.29.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netedit.exeConfiguration.xsd">
@@ -394,36 +394,44 @@
     </edge>
 
     <tlLogic id="0" type="static" programID="0" offset="0">
-        <phase duration="100" state="grrrrgrrrrGGGGGgrrrr"/>
-        <phase duration="100" state="gGGrrgrrrrgGGrrgrrrr"/>
-        <phase duration="100" state="GGGGGgrrrrgrrrrgrrrr"/>
-        <phase duration="100" state="grrrrGGGGGgrrrrgrrrr"/>
-        <phase duration="100" state="grrrrgGGrrgrrrrgGGrr"/>
-        <phase duration="100" state="grrrrgrrrrgrrrrGGGGG"/>
+        <phase duration="31" state="rrrrrrrrrrGGGGgGgggg"/>
+        <phase duration="4" state="rrrrrrrrrryyyygygggg"/>
+        <phase duration="6" state="rrrrrrrrrrrrrrGrGGGG"/>
+        <phase duration="4" state="rrrrrrrrrrrrrryryyyy"/>
+        <phase duration="31" state="GGGGgGggggrrrrrrrrrr"/>
+        <phase duration="4" state="yyyygyggggrrrrrrrrrr"/>
+        <phase duration="6" state="rrrrGrGGGGrrrrrrrrrr"/>
+        <phase duration="4" state="rrrryryyyyrrrrrrrrrr"/>
     </tlLogic>
     <tlLogic id="1" type="static" programID="0" offset="0">
-        <phase duration="100" state="grrrrgrrrrGGGGGgrrrr"/>
-        <phase duration="100" state="gGGrrgrrrrgGGrrgrrrr"/>
-        <phase duration="100" state="GGGGGgrrrrgrrrrgrrrr"/>
-        <phase duration="100" state="grrrrGGGGGgrrrrgrrrr"/>
-        <phase duration="100" state="grrrrgGGrrgrrrrgGGrr"/>
-        <phase duration="100" state="grrrrgrrrrgrrrrGGGGG"/>
+        <phase duration="31" state="rrrrrGGGGgGggggrrrrr"/>
+        <phase duration="4" state="rrrrryyyygyggggrrrrr"/>
+        <phase duration="6" state="rrrrrrrrrGrGGGGrrrrr"/>
+        <phase duration="4" state="rrrrrrrrryryyyyrrrrr"/>
+        <phase duration="31" state="GggggrrrrrrrrrrGGGGg"/>
+        <phase duration="4" state="yggggrrrrrrrrrryyyyg"/>
+        <phase duration="6" state="rGGGGrrrrrrrrrrrrrrG"/>
+        <phase duration="4" state="ryyyyrrrrrrrrrrrrrry"/>
     </tlLogic>
     <tlLogic id="2" type="static" programID="0" offset="0">
-        <phase duration="100" state="grrrrgrrrrGGGGGgrrrr"/>
-        <phase duration="100" state="gGGrrgrrrrgGGrrgrrrr"/>
-        <phase duration="100" state="GGGGGgrrrrgrrrrgrrrr"/>
-        <phase duration="100" state="grrrrGGGGGgrrrrgrrrr"/>
-        <phase duration="100" state="grrrrgGGrrgrrrrgGGrr"/>
-        <phase duration="100" state="grrrrgrrrrgrrrrGGGGG"/>
+        <phase duration="31" state="GggggrrrrrrrrrrGGGGg"/>
+        <phase duration="4" state="yggggrrrrrrrrrryyyyg"/>
+        <phase duration="6" state="rGGGGrrrrrrrrrrrrrrG"/>
+        <phase duration="4" state="ryyyyrrrrrrrrrrrrrry"/>
+        <phase duration="31" state="rrrrrGGGGgGggggrrrrr"/>
+        <phase duration="4" state="rrrrryyyygyggggrrrrr"/>
+        <phase duration="6" state="rrrrrrrrrGrGGGGrrrrr"/>
+        <phase duration="4" state="rrrrrrrrryryyyyrrrrr"/>
     </tlLogic>
     <tlLogic id="3" type="static" programID="0" offset="0">
-        <phase duration="100" state="grrrrgrrrrGGGGGgrrrr"/>
-        <phase duration="100" state="gGGrrgrrrrgGGrrgrrrr"/>
-        <phase duration="100" state="GGGGGgrrrrgrrrrgrrrr"/>
-        <phase duration="100" state="grrrrGGGGGgrrrrgrrrr"/>
-        <phase duration="100" state="grrrrgGGrrgrrrrgGGrr"/>
-        <phase duration="100" state="grrrrgrrrrgrrrrGGGGG"/>
+        <phase duration="31" state="GGGGgGggggrrrrrrrrrr"/>
+        <phase duration="4" state="yyyygyggggrrrrrrrrrr"/>
+        <phase duration="6" state="rrrrGrGGGGrrrrrrrrrr"/>
+        <phase duration="4" state="rrrryryyyyrrrrrrrrrr"/>
+        <phase duration="31" state="rrrrrrrrrrGGGGgGgggg"/>
+        <phase duration="4" state="rrrrrrrrrryyyygygggg"/>
+        <phase duration="6" state="rrrrrrrrrrrrrrGrGGGG"/>
+        <phase duration="4" state="rrrrrrrrrrrrrryryyyy"/>
     </tlLogic>
 
     <junction id="0" type="traffic_light" x="-0.01" y="399.75" incLanes="0/0to0/1_0 0/0to0/1_1 1/1to0/1_0 1/1to0/1_1 gneE4_0 gneE4_1 gneE2_0 gneE2_1" intLanes=":0_0_0 :0_1_0 :0_1_1 :0_3_0 :0_20_0 :0_5_0 :0_6_0 :0_6_1 :0_21_0 :0_9_0 :0_10_0 :0_11_0 :0_11_1 :0_13_0 :0_22_0 :0_15_0 :0_16_0 :0_16_1 :0_23_0 :0_24_0" shape="-6.57,391.70 6.53,391.68 8.05,393.21 8.04,406.31 6.54,407.81 -6.56,407.81 -8.07,406.30 -8.07,393.20">
