@@ -70,6 +70,11 @@ def run(options):
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
 
+        # skip everything and run according to default values
+        if (options.learn == '0'):
+            step += 1
+            continue
+
         # current traffic light index number
         i = 0
         for ID in trafficLights:
@@ -202,8 +207,8 @@ def get_options():
                          help="specify the number of cars generated for simulation")
     optParser.add_option("--bracket", dest="bracket", default=10, metavar="BRACKET",
                          help="specify the number with which to partition the range of queue length/cumulative delay")
-    optParser.add_option("--learning", dest="learn", default='1', metavar="NUM", choices= ['1', '2'],
-                         help="specify learning method (1 = Q-Learning, 2 = SARSA)")
+    optParser.add_option("--learning", dest="learn", default='1', metavar="NUM", choices= ['0', '1', '2'],
+                         help="specify learning method (0 = No Learning, 1 = Q-Learning, 2 = SARSA)")
     optParser.add_option("--state", dest="stateRep", default='1', metavar="NUM", choices= ['1', '2'],
                          help="specify traffic state representation to be used (1 = Queue Length, 2 = Cumulative Delay)")
     optParser.add_option("--phasing", dest="phasing", default='1', metavar="NUM", choices= ['1', '2'],
@@ -221,7 +226,7 @@ def generate_routefile(options):
     os.system("python randomTrips.py -n " + filename
         + " --weights-prefix " + os.path.join(fileDir, 'data/cross') + " -e " + str(options.numberCars)
         + " -p  4" + " -r " + os.path.join(fileDir, 'data/cross.rou.xml')
-        + " --trip-attributes=\"type=\"'typedist1'\"\""
+        + " --trip-attributes=\"type=\"\"'typedist1'\"\"\""
         + " --additional-file "  +  os.path.join(fileDir, 'data/type.add.xml')
         + " --edge-permission emergency passenger taxi bus truck motorcycle bicycle"
         )
@@ -241,10 +246,14 @@ if __name__ == "__main__":
     # generate the route file for this simulation
     generate_routefile(options)
 
+    addFile = "data/cross.add.xml"
+    if (options.learn == '0'):
+        addFile = "data/cross_no_learn.add.xml"
+
     # Sumo is started as a subprocess and then the python script connects and runs
     traci.start([sumoBinary, "-c", "data/cross.sumocfg",
                              "-n", "data/cross.net.xml",
-                             "-a", "data/cross.add.xml",
+                             "-a", addFile,
                              "-r", "data/cross.rou.xml",
                              "--queue-output", "queue.xml",
                              "--tripinfo-output", "tripinfo.xml"])
