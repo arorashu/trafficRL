@@ -1,7 +1,7 @@
 from pymongo import MongoClient
-from eGreedy import eGreedy, softmax
-from qLearning import qLearning, sarsa
-from queueBalanceReward import queueBalanceReward, delayReward
+from actionSelection import eGreedy, softmax
+from learningMethods import qLearning, sarsa
+from rewardDefinitions import queueBalanceReward, delayReward
 import globals
 import pprint
 

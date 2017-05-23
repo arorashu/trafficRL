@@ -1,0 +1,40 @@
+DB Black Box Function Structure:
+
+	Get state vector (size = 2+N where N = number of phases) from SUMO
+	Save it in curr
+
+
+	Check if state already exists in DB
+		If no, add all (curr,a) pairs to DB and initialize Q(curr,a) values to 0
+
+	Get reward by calling getReward function
+		reward = queueBalanceReward(pre, curr, N)
+
+
+	Update Q value of (pre, preAction) by calling Q learning function after setting variables
+		currQ = Q(pre, preAction)							#look up DB
+		nextMaxQ = max( Q(curr,a) ) over all a 				#parse DB for all a corresponding to curr
+		
+		newQ = qLearning(currQ, alpha, gamma, reward, nextMaxQ)
+		
+		Set Q(pre, preAction) to newQ in DB
+
+
+	Parse all (curr,a) pair values to get 'greedyAction'
+		greedyAction = arg( max( Q( curr,a ) ) )			#merge with finding nextMaxQ, specified here for understanding
+
+
+	Call epsilon greedy function to tell nextAction (integer) to be taken in next time step. 		TO BE PASSED TO SUMO
+		nextAction = eGreedy(numActions, E, age, greedyAction)
+			
+			if Fixed Phasing:
+				nextAction = 0 or 1 (0 = continue same phase, 1 = go to next phase)
+				i.e. index of next phase = (currPhaseIndex + action) % N
+		
+			if Variable Phasing:
+				0<= nextAction< N  (i.e. index of next phase, if same as index of current phase then continue same phase)
+
+	Update variables after each time step
+		age = age + 1
+		pre = curr
+		preAction = nextAction
