@@ -126,7 +126,7 @@ def run(options):
             avgQL[i] = (avgQL[i]*step + avgQLCurr[i])/((step+1)*1.0)
 
             # run only for every db_step
-            if (step%dbStep == 0) :
+            if (step%dbStep == 0 and currPhase[i]!=2 and currPhase[i]!=4 and currPhase[i]!=7 and currPhase[i]!=9):
 
                 if (options.stateRep == '1'):
                     # generate current step's phase vector - with queueLength
@@ -157,9 +157,9 @@ def run(options):
                 ages[i] += 1
                 prePhase[i] = phaseVector[:]
                 preAction[i] = nextAction
-
+                currPhase[i] = traci.trafficlights.getPhase(ID)
                 if (nextAction == 1):
-                    currPhase[i] = (currPhase[i] + 1)%6
+                    currPhase[i] = (currPhase[i] + 1)%10
                     traci.trafficlights.setPhase(ID, currPhase[i])
                     currTime = 1
                 else :
@@ -218,7 +218,11 @@ def generate_routefile(options):
     filename = os.path.join(fileDir, 'data/cross.net.xml')
     os.system("python randomTrips.py -n " + filename
         + " --weights-prefix " + os.path.join(fileDir, 'data/cross') + " -e " + str(options.numberCars)
-        + " -p  4" + " -r " + os.path.join(fileDir, 'data/cross.rou.xml'))
+        + " -p  4" + " -r " + os.path.join(fileDir, 'data/cross.rou.xml')
+        + " --trip-attributes=\"type=\"'typedist1'\"\"" 
+        + " --additional-file "  +  os.path.join(fileDir, 'data/type.add.xml')
+        + " --edge-permission emergency passenger taxi bus truck motorcycle bicycle"
+        )
 
 
 # this is the main entry point of this script
@@ -238,6 +242,7 @@ if __name__ == "__main__":
     # Sumo is started as a subprocess and then the python script connects and runs
     traci.start([sumoBinary, "-c", "data/cross.sumocfg",
                              "-n", "data/cross.net.xml",
+                             "-a", "data/cross.add.xml",
                              "-r", "data/cross.rou.xml",
                              "--queue-output", "queue.xml",
                              "--tripinfo-output", "tripinfo.xml"])

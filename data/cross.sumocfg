@@ -14,7 +14,6 @@
     <report>
         <duration-log.statistics value="true"/>
         <no-step-log value="true"/>
-        <log value="mylog.txt"/>
     </report>
 
 </configuration>

@@ -1,0 +1,11 @@
+<additional>
+    <vTypeDistribution id="typedist1">
+		  <vType id="v1" maxSpeed="27" vClass="emergency" probability="0.1"/>
+		  <vType id="v2" maxSpeed="27" vClass="passenger" probability="0.31"/>
+		  <vType id="v3" maxSpeed="27" vClass="taxi" probability="0.15"/>
+		  <vType id="v4" maxSpeed="27" vClass="bus" probability="0.1"/>
+		  <vType id="v5" maxSpeed="27" vClass="truck" probability="0.05"/>
+		  <vType id="v6" maxSpeed="27" vClass="motorcycle" probability="0.45"/>
+		  <vType id="v7" maxSpeed="27" vClass="bicycle" probability="0.05"/>
+	</vTypeDistribution>
+</additional>
