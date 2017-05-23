@@ -85,33 +85,33 @@ def run(options):
             lanes = lanesUniq
 
             # get cumulative delay
-            cumulativeDelay = cumuDelay[i]
-            oldVehicles = oldVeh[i]
-            vehicles = []
-            for z in lanes:
-                vehicles.append(Counter())
-            if(cumulativeDelay == None):
-                cumulativeDelay = len(lanes)*[0]
-            if(oldVehicles == None):
-                oldVehicles = []
+            if (options.stateRep == '2'):
+                cumulativeDelay = cumuDelay[i]
+                oldVehicles = oldVeh[i]
+                vehicles = []
                 for z in lanes:
-                    oldVehicles.append(Counter())
-
-            j = 0
-            for lane in lanes:
-                listVehicles = traci.lane.getLastStepVehicleIDs(lane)
-                for veh in listVehicles:
-                    vehicles[j][veh] = oldVehicles[j][veh]
-                    if (traci.vehicle.isStopped(veh)):
-                        vehicles[j][veh] += 1
-                        cumulativeDelay[j] += 1
-                vehToDelete = oldVehicles[j] - vehicles[j]
-                for veh, vDelay in vehToDelete.most_common():
-                    cumulativeDelay[j] -= vDelay
-                oldVehicles[j] = vehicles[j]
-                j+=1
-            cumuDelay[i] = cumulativeDelay
-            oldVeh[i] = oldVehicles
+                    vehicles.append(Counter())
+                if(cumulativeDelay == None):
+                    cumulativeDelay = len(lanes)*[0]
+                if(oldVehicles == None):
+                    oldVehicles = []
+                    for z in lanes:
+                        oldVehicles.append(Counter())
+                j = 0
+                for lane in lanes:
+                    listVehicles = traci.lane.getLastStepVehicleIDs(lane)
+                    for veh in listVehicles:
+                        vehicles[j][veh] = oldVehicles[j][veh]
+                        if (traci.vehicle.isStopped(veh)):
+                            vehicles[j][veh] += 1
+                            cumulativeDelay[j] += 1
+                    vehToDelete = oldVehicles[j] - vehicles[j]
+                    for veh, vDelay in vehToDelete.most_common():
+                        cumulativeDelay[j] -= vDelay
+                    oldVehicles[j] = vehicles[j]
+                    j+=1
+                cumuDelay[i] = cumulativeDelay
+                oldVeh[i] = oldVehicles
 
             # get average queue length for current time step
             queueLength=[]
@@ -219,7 +219,7 @@ def generate_routefile(options):
     os.system("python randomTrips.py -n " + filename
         + " --weights-prefix " + os.path.join(fileDir, 'data/cross') + " -e " + str(options.numberCars)
         + " -p  4" + " -r " + os.path.join(fileDir, 'data/cross.rou.xml')
-        + " --trip-attributes=\"type=\"'typedist1'\"\"" 
+        + " --trip-attributes=\"type=\"'typedist1'\"\""
         + " --additional-file "  +  os.path.join(fileDir, 'data/type.add.xml')
         + " --edge-permission emergency passenger taxi bus truck motorcycle bicycle"
         )
