@@ -1,5 +1,6 @@
 import math
 import random
+import numpy
 """numActions = number of actions ie 2 for fixed phasing and N for variable phasing
             fixed phasing:      0 = same phase, 1 = next phase
             variable phasing:   i = index of next phase (can be same as curr phase)
@@ -28,9 +29,9 @@ def eGreedy(numActions, E, age, currBSON):
 
 def softmax(numActions, numberCars, age, currBSON):
     # currBSON = DB entry corresponding to current (curr) state
-    temperature = math.exp(-1*age/numberCars)
-    options = numActions*[0]
-    selProb = numActions*[0]
+    temperature = math.exp(-1*age/int(numberCars))
+    options = numActions*[None]
+    selProb = numActions*[None]
     selProbSum = 0
     for i in range(0, numActions):
         options[i] = i
@@ -40,7 +41,7 @@ def softmax(numActions, numberCars, age, currBSON):
     for i in range(0, numActions):
         selProb[i] /= selProbSum
 
-    return numpy.random.choice(options, p=selProb)
+    return int(numpy.random.choice(options, p=selProb))
 
 if __name__=="__main__":
     numActions = 5
