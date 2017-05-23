@@ -1,6 +1,6 @@
 # trafficRL
 
-## Installation instructions to follow (for Ubuntu)
+## Installation instructions to follow
 
 ### 1. Install SUMO:
 
