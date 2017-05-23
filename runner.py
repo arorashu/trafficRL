@@ -128,21 +128,22 @@ def run(options):
             # run only for every db_step
             if (step%dbStep == 0) :
 
-                # generate current step's phase vector - with queueLength
-                phaseVector[0] = int(round(max(queueLength[0], queueLength[1])/options.qlBracket))
-                phaseVector[1] = int(round(max(queueLength[0], queueLength[5])/options.qlBracket))
-                phaseVector[2] = int(round(max(queueLength[4], queueLength[5])/options.qlBracket))
-                phaseVector[3] = int(round(max(queueLength[6], queueLength[7])/options.qlBracket))
-                phaseVector[4] = int(round(max(queueLength[2], queueLength[6])/options.qlBracket))
-                phaseVector[5] = int(round(max(queueLength[2], queueLength[3])/options.qlBracket))
-
-                # generate current step's phase vector - with cumulativeDelay
-                # phaseVector[0] = int(round(cumulativeDelay[0] + cumulativeDelay[1])/options.qlBracket)
-                # phaseVector[1] = int(round(cumulativeDelay[0] + cumulativeDelay[5])/options.qlBracket)
-                # phaseVector[2] = int(round(cumulativeDelay[4] + cumulativeDelay[5])/options.qlBracket)
-                # phaseVector[3] = int(round(cumulativeDelay[6] + cumulativeDelay[7])/options.qlBracket)
-                # phaseVector[4] = int(round(cumulativeDelay[2] + cumulativeDelay[6])/options.qlBracket)
-                # phaseVector[5] = int(round(cumulativeDelay[2] + cumulativeDelay[3])/options.qlBracket)
+                if (options.stateRep == '1'):
+                    # generate current step's phase vector - with queueLength
+                    phaseVector[0] = int(round(max(queueLength[0], queueLength[1])/options.bracket))
+                    phaseVector[1] = int(round(max(queueLength[0], queueLength[5])/options.bracket))
+                    phaseVector[2] = int(round(max(queueLength[4], queueLength[5])/options.bracket))
+                    phaseVector[3] = int(round(max(queueLength[6], queueLength[7])/options.bracket))
+                    phaseVector[4] = int(round(max(queueLength[2], queueLength[6])/options.bracket))
+                    phaseVector[5] = int(round(max(queueLength[2], queueLength[3])/options.bracket))
+                elif (options.stateRep == '2'):
+                    # generate current step's phase vector - with cumulativeDelay
+                    phaseVector[0] = int(round(cumulativeDelay[0] + cumulativeDelay[1])/options.bracket)
+                    phaseVector[1] = int(round(cumulativeDelay[0] + cumulativeDelay[5])/options.bracket)
+                    phaseVector[2] = int(round(cumulativeDelay[4] + cumulativeDelay[5])/options.bracket)
+                    phaseVector[3] = int(round(cumulativeDelay[6] + cumulativeDelay[7])/options.bracket)
+                    phaseVector[4] = int(round(cumulativeDelay[2] + cumulativeDelay[6])/options.bracket)
+                    phaseVector[5] = int(round(cumulativeDelay[2] + cumulativeDelay[3])/options.bracket)
 
                 # print and save current stats
                 print(avgQL[i], avgQLCurr[i], step, ID)
@@ -151,9 +152,8 @@ def run(options):
                                             "avgQL": avgQL[i],
                                             "ID": ID})
 
-                nextAction = dbFunction(phaseVector, prePhase[i], preAction[i], ages[i], ID)
-
                 # update values
+                nextAction = dbFunction(phaseVector, prePhase[i], preAction[i], ages[i], ID, options)
                 ages[i] += 1
                 prePhase[i] = phaseVector[:]
                 preAction[i] = nextAction
@@ -198,9 +198,16 @@ def get_options():
                          default=False, help="run the commandline version of sumo")
     optParser.add_option("--cars", "-C", dest="numberCars", default=20000, metavar="NUM",
                          help="specify the number of cars generated for simulation")
-    optParser.add_option("--qlBracket", dest="qlBracket", default=10, metavar="BRACKET",
-                         help="specify the number with which to partition the range of queue length")
-    optParser.add_option("--lateral-resolution", default=1.0, help="parameter for sublane model")
+    optParser.add_option("--bracket", dest="bracket", default=10, metavar="BRACKET",
+                         help="specify the number with which to partition the range of queue length/cumulative delay")
+    optParser.add_option("--learning", dest="learn", default='1', metavar="NUM", choices= ['1', '2'],
+                         help="specify learning method (1 = Q-Learning, 2 = SARSA)")
+    optParser.add_option("--state", dest="stateRep", default='1', metavar="NUM", choices= ['1', '2'],
+                         help="specify traffic state representation to be used (1 = Queue Length, 2 = Cumulative Delay)")
+    optParser.add_option("--phasing", dest="phasing", default='1', metavar="NUM", choices= ['1', '2'],
+                         help="specify phasing scheme (1 = Fixed Phasing, 2 = Variable Phasing)")
+    optParser.add_option("--action", dest="actionSel", default='1', metavar="NUM", choices= ['1', '2'],
+                         help="specify action selection method (1 = epsilon greedy, 2 = softmax)")
     options, args = optParser.parse_args()
     return options
 
@@ -208,7 +215,6 @@ def get_options():
 def generate_routefile(options):
     #generating route file using randomTrips.py
     fileDir = os.path.dirname(os.path.realpath('__file__'))
-    print(str(options.numberCars))
     filename = os.path.join(fileDir, 'data/cross.net.xml')
     os.system("python randomTrips.py -n " + filename
         + " --weights-prefix " + os.path.join(fileDir, 'data/cross') + " -e " + str(options.numberCars)
