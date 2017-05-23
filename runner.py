@@ -85,8 +85,7 @@ def run(options):
             avgQL[i] = (avgQL[i]*step + avgQLCurr[i])/((step+1)*1.0)
 
             # run only for every db_step
-            if (step%dbStep == 0) :
-
+            if (step%dbStep == 0 and currPhase[i]!=2 and currPhase[i]!=4 and currPhase[i]!=7 and currPhase[i]!=9):
                 # generate current step's phase vector
                 phaseVector[0] = int(round(max(queueLength[0], queueLength[1])/options.qlBracket))
                 phaseVector[1] = int(round(max(queueLength[0], queueLength[5])/options.qlBracket))
@@ -106,8 +105,9 @@ def run(options):
                 ages[i] += 1
                 prePhase[i] = phaseVector[:]
                 preAction[i] = nextAction
+                currPhase[i] = traci.trafficlights.getPhase(ID)
                 if (nextAction == 1):
-                    currPhase[i] = (currPhase[i] + 1)%6
+                    currPhase[i] = (currPhase[i] + 1)%10
                     traci.trafficlights.setPhase(ID, currPhase[i])
                     currTime = 1
                 else :
