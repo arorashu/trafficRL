@@ -7,8 +7,7 @@ import random
         E = 0.05
         age = age of agent, increment at each time step
 """
-def eGreedy(numActions, E, age, greedyAction):
-    # greedyAction = action with best Q(s,a)
+def eGreedy(numActions, E, age, currBSON):
     epsilon = math.exp(-1*E*age)
     rand = random.uniform(0,1)
 
@@ -19,14 +18,19 @@ def eGreedy(numActions, E, age, greedyAction):
     if rand<=epsilon:
         return random.randint(0,numActions-1)
     else:
+        nextMaxQ = currBSON[0]['qVal']
+        greedyAction = 0
+        for i in currBSON:
+            if nextMaxQ < i['qVal']:
+                nextMaxQ = i['qVal']
+                greedyAction = i['action']
         return greedyAction
 
 def softmax(numActions, E, age, currBSON):
     # currBSON = DB entry corresponding to current (curr) state
-    temperature = math.exp(-1*E*age)
     selProb = numActions*[0]
     for i in range(0, numActions):
-        selProb[i] = math.exp(currBSON[i]['qVal']/temperature)
+        selProb[i] = math.exp(currBSON[i]['qVal'])
 
     action = 0
     tempMax = selProb[0]

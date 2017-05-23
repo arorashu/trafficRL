@@ -1,7 +1,7 @@
 from pymongo import MongoClient
-from eGreedy import eGreedy
-from qLearning import qLearning
-from queueBalanceReward import queueBalanceReward
+from eGreedy import eGreedy, softmax
+from qLearning import qLearning, sarsa
+from queueBalanceReward import queueBalanceReward, delayReward
 import globals
 import pprint
 
@@ -19,6 +19,8 @@ db = client['trafficLight']
 def initTrafficLight(ID):
     pre = 6*[0]
     qValues = db['qValues' + ID]
+    if (qValues.find({"state": pre}).count() != 0):
+        return
     temp = []
     for i in range(0, globals.numActions):
         temp.append({"state":   pre,
@@ -53,7 +55,11 @@ def saveStats( traffic_light_count, temp_stats ):
         run_stats.append({"run_id": run_id, "data": temp_stats[id]})
         stats[id].insert_many(run_stats)
 
-def dbFunction(curr, pre, preAction, age, ID):
+def dbFunction(curr, pre, preAction, age, ID, options):
+    reward = 0
+    newQ = 0
+    nextAction = 0
+
     qValues = db['qValues' + ID]
     currBSON = qValues.find({"state": curr})
     temp = []
@@ -67,10 +73,14 @@ def dbFunction(curr, pre, preAction, age, ID):
         currBSON = temp
     # TO-DO: visits to be updated
 
-    reward = queueBalanceReward(pre, curr, globals.N)
+    if (options.stateRep == '1'):
+        reward = queueBalanceReward(pre, curr, globals.N)
+    else:
+        reward = delayReward(pre, curr, globals.N)
 
     currQ = qValues.find_one({"state":  pre, "action":   preAction})['qVal']
 
+    # converts currBSON from cursor to list
     tempBSON = []
     for c in currBSON:
         tempBSON.append(c)
@@ -80,20 +90,26 @@ def dbFunction(curr, pre, preAction, age, ID):
     for i in currBSON:
         nextMaxQ = max(nextMaxQ, i['qVal'])
 
-    newQ = qLearning(currQ, globals.alpha, globals.gamma, reward, nextMaxQ)
+    if (options.learn == '1'):
+        newQ = qLearning(currQ, globals.alpha, globals.gamma, reward, nextMaxQ)
+    else:
+        nextQ = 0
+        if (options.actionSel=='1'):
+            nextQ = currBSON[eGreedy(globals.numActions, globals.E, age, currBSON)]['qVal']
+        else:
+            nextQ = currBSON[softmax(globals.numActions, globals.E, age, currBSON)]['qVal']
+        newQ = sarsa(currQ, globals.alpha, globals.gamma, reward, nextQ)
 
     qValues.find_one_and_update({"state": pre, "action": preAction}, {'$set': {"qVal": newQ}})
 
     currBSON = qValues.find({"state": curr})
 
-    nextMaxQ = currBSON[0]['qVal']
-    greedyAction = 0
-    for i in currBSON:
-        if nextMaxQ < i['qVal']:
-            nextMaxQ = i['qVal']
-            greedyAction = i['action']
-
     # nextAction = 0 or 1 (0 = continue same phase, 1 = go to next phase)
     # i.e. index of next phase = (currPhaseIndex + action) % N
-    nextAction = eGreedy(globals.numActions, globals.E, age, greedyAction)
+
+    if (options.actionSel=='1'):
+        nextAction = eGreedy(globals.numActions, globals.E, age, currBSON)
+    else:
+        nextAction = softmax(globals.numActions, globals.E, age, currBSON)
+
     return nextAction
