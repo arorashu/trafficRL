@@ -19,6 +19,8 @@ db = client['trafficLight']
 def initTrafficLight(ID):
     pre = 6*[0]
     qValues = db['qValues' + ID]
+    if (qValues.find({"state": pre}).count() != 0):
+        return
     temp = []
     for i in range(0, globals.numActions):
         temp.append({"state":   pre,

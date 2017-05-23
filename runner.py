@@ -9,6 +9,8 @@ import sys
 import optparse
 import subprocess
 import random
+from collections import Counter
+from pymongo import MongoClient
 from dbFunction import dbFunction, initTrafficLight, initRunCount, saveStats
 from globals import init
 
@@ -27,7 +29,6 @@ except ImportError:
 import traci
 
 def run(options):
-
     initRunCount()
     tempStats = []
     temp = []
@@ -43,7 +44,6 @@ def run(options):
         tempStats.append(temp)
 
     phaseVector = 6*[None]
-    ages = trafficLightsNumber*[0]
     prePhase = trafficLightsNumber*[phaseVector]
     preAction = trafficLightsNumber*[0]
     currPhase = trafficLightsNumber*[0]
@@ -51,13 +51,26 @@ def run(options):
     dbStep = 100
     avgQL = trafficLightsNumber*[0]
     avgQLCurr = trafficLightsNumber*[0]
+    oldVeh = trafficLightsNumber*[None]
+    cumuDelay = trafficLightsNumber*[None]
+    ages = trafficLightsNumber*[0]
+
+    # get age value from DB
+    client = MongoClient()
+    db = client['trafficLight']
+    i = 0
+    for ID in trafficLights:
+        qValues = db['qValues' + ID]
+        if (qValues.find({"ageExists": True}).count() != 0):
+            ages[i] = qValues.find_one({"ageExists": True})['age']
+        i+=1
 
     # execute the TraCI control loop
     step = 0
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
 
-        # current phase index number
+        # current traffic light index number
         i = 0
         for ID in trafficLights:
 
@@ -71,6 +84,34 @@ def run(options):
                 j+=1
             lanes = lanesUniq
 
+            # get cumulative delay
+            cumulativeDelay = cumuDelay[i]
+            oldVehicles = oldVeh[i]
+            vehicles = []
+            for z in lanes:
+                vehicles.append(Counter())
+            if(cumulativeDelay == None):
+                cumulativeDelay = len(lanes)*[0]
+            if(oldVehicles == None):
+                oldVehicles = []
+                for z in lanes:
+                    oldVehicles.append(Counter())
+
+            j = 0
+            for lane in lanes:
+                listVehicles = traci.lane.getLastStepVehicleIDs(lane)
+                for veh in listVehicles:
+                    vehicles[j][veh] = oldVehicles[j][veh]
+                    if (traci.vehicle.isStopped(veh)):
+                        vehicles[j][veh] += 1
+                        cumulativeDelay[j] += 1
+                vehToDelete = oldVehicles[j] - vehicles[j]
+                for veh, vDelay in vehToDelete.most_common():
+                    cumulativeDelay[j] -= vDelay
+                oldVehicles[j] = vehicles[j]
+                j+=1
+            cumuDelay[i] = cumulativeDelay
+            oldVeh[i] = oldVehicles
 
             # get average queue length for current time step
             queueLength=[]
@@ -87,13 +128,22 @@ def run(options):
             # run only for every db_step
             if (step%dbStep == 0) :
 
-                # generate current step's phase vector
-                phaseVector[0] = int(round(max(queueLength[0], queueLength[1])/options.qlBracket))
-                phaseVector[1] = int(round(max(queueLength[0], queueLength[5])/options.qlBracket))
-                phaseVector[2] = int(round(max(queueLength[4], queueLength[5])/options.qlBracket))
-                phaseVector[3] = int(round(max(queueLength[6], queueLength[7])/options.qlBracket))
-                phaseVector[4] = int(round(max(queueLength[2], queueLength[6])/options.qlBracket))
-                phaseVector[5] = int(round(max(queueLength[2], queueLength[3])/options.qlBracket))
+                if (options.stateRep == '1'):
+                    # generate current step's phase vector - with queueLength
+                    phaseVector[0] = int(round(max(queueLength[0], queueLength[1])/options.bracket))
+                    phaseVector[1] = int(round(max(queueLength[0], queueLength[5])/options.bracket))
+                    phaseVector[2] = int(round(max(queueLength[4], queueLength[5])/options.bracket))
+                    phaseVector[3] = int(round(max(queueLength[6], queueLength[7])/options.bracket))
+                    phaseVector[4] = int(round(max(queueLength[2], queueLength[6])/options.bracket))
+                    phaseVector[5] = int(round(max(queueLength[2], queueLength[3])/options.bracket))
+                elif (options.stateRep == '2'):
+                    # generate current step's phase vector - with cumulativeDelay
+                    phaseVector[0] = int(round(cumulativeDelay[0] + cumulativeDelay[1])/options.bracket)
+                    phaseVector[1] = int(round(cumulativeDelay[0] + cumulativeDelay[5])/options.bracket)
+                    phaseVector[2] = int(round(cumulativeDelay[4] + cumulativeDelay[5])/options.bracket)
+                    phaseVector[3] = int(round(cumulativeDelay[6] + cumulativeDelay[7])/options.bracket)
+                    phaseVector[4] = int(round(cumulativeDelay[2] + cumulativeDelay[6])/options.bracket)
+                    phaseVector[5] = int(round(cumulativeDelay[2] + cumulativeDelay[3])/options.bracket)
 
                 # print and save current stats
                 print(avgQL[i], avgQLCurr[i], step, ID)
@@ -102,10 +152,12 @@ def run(options):
                                             "avgQL": avgQL[i],
                                             "ID": ID})
 
+                # update values
                 nextAction = dbFunction(phaseVector, prePhase[i], preAction[i], ages[i], ID, options)
                 ages[i] += 1
                 prePhase[i] = phaseVector[:]
                 preAction[i] = nextAction
+
                 if (nextAction == 1):
                     currPhase[i] = (currPhase[i] + 1)%6
                     traci.trafficlights.setPhase(ID, currPhase[i])
@@ -117,6 +169,14 @@ def run(options):
             i+=1
         step += 1
 
+    # update age in DB
+    i = 0
+    for ID in trafficLights:
+        qValues = db['qValues' + ID]
+        qValues.find_one_and_update({"ageExists": True}, {"$set": {"age": ages[i]}}, upsert=True)
+        i+=1
+
+    # print final average
     avgQLTotal = 0
     i = 0
     for avgQLC in avgQL:
@@ -138,8 +198,8 @@ def get_options():
                          default=False, help="run the commandline version of sumo")
     optParser.add_option("--cars", "-C", dest="numberCars", default=20000, metavar="NUM",
                          help="specify the number of cars generated for simulation")
-    optParser.add_option("--qlBracket", dest="qlBracket", default=10, metavar="BRACKET",
-                         help="specify the number with which to partition the range of queue length")
+    optParser.add_option("--bracket", dest="bracket", default=10, metavar="BRACKET",
+                         help="specify the number with which to partition the range of queue length/cumulative delay")
     optParser.add_option("--learning", dest="learn", default='1', metavar="NUM", choices= ['1', '2'],
                          help="specify learning method (1 = Q-Learning, 2 = SARSA)")
     optParser.add_option("--state", dest="stateRep", default='1', metavar="NUM", choices= ['1', '2'],
@@ -155,7 +215,6 @@ def get_options():
 def generate_routefile(options):
     #generating route file using randomTrips.py
     fileDir = os.path.dirname(os.path.realpath('__file__'))
-    print(str(options.numberCars))
     filename = os.path.join(fileDir, 'data/cross.net.xml')
     os.system("python randomTrips.py -n " + filename
         + " --weights-prefix " + os.path.join(fileDir, 'data/cross') + " -e " + str(options.numberCars)
