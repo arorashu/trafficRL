@@ -110,6 +110,6 @@ def dbFunction(curr, pre, preAction, age, ID, options):
     if (options.actionSel=='1'):
         nextAction = eGreedy(globals.numActions, globals.E, age, currBSON)
     else:
-        nextAction = softmax(globals.numActions, globals.E, age, currBSON)
+        nextAction = softmax(globals.numActions, options.numberCars, age, currBSON)
 
     return nextAction

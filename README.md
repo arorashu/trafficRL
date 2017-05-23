@@ -21,9 +21,12 @@ For Ubuntu:
 For Windows:
     "C:\Program Files\MongoDB\Server\3.4\bin\mongod.exe"
 
-### 3. Install PyMongo using pip
+### 3. Install PyMongo and NumPy using pip
 
     python -m pip install --user pymongo
+
+    python -m pip install --user numpy
+
 
 ### 4. Clone repository
 
