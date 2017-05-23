@@ -125,7 +125,10 @@ def run(options):
             # get average queue length till now
             avgQL[i] = (avgQL[i]*step + avgQLCurr[i])/((step+1)*1.0)
 
-            # run only for every db_step
+            options.bracket = int(options.bracket)
+            currPhase[i] = traci.trafficlights.getPhase(ID)
+
+            # run only for every db_step and when phase is not yellow
             if (step%dbStep == 0 and currPhase[i]!=2 and currPhase[i]!=4 and currPhase[i]!=7 and currPhase[i]!=9):
 
                 if (options.stateRep == '1'):
@@ -157,7 +160,6 @@ def run(options):
                 ages[i] += 1
                 prePhase[i] = phaseVector[:]
                 preAction[i] = nextAction
-                currPhase[i] = traci.trafficlights.getPhase(ID)
                 if (nextAction == 1):
                     currPhase[i] = (currPhase[i] + 1)%10
                     traci.trafficlights.setPhase(ID, currPhase[i])
