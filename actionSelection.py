@@ -26,20 +26,21 @@ def eGreedy(numActions, E, age, currBSON):
                 greedyAction = i['action']
         return greedyAction
 
-def softmax(numActions, E, age, currBSON):
+def softmax(numActions, numberCars, age, currBSON):
     # currBSON = DB entry corresponding to current (curr) state
+    temperature = math.exp(-1*age/numberCars)
+    options = numActions*[0]
     selProb = numActions*[0]
+    selProbSum = 0
     for i in range(0, numActions):
-        selProb[i] = math.exp(currBSON[i]['qVal'])
+        options[i] = i
+        selProb[i] = math.exp(currBSON[i]['qVal']/temperature)
+        selProbSum += selProb[i]
 
-    action = 0
-    tempMax = selProb[0]
     for i in range(0, numActions):
-        if selProb[i] >= tempMax:
-            action = i
-            tempMax = selProb[i]
+        selProb[i] /= selProbSum
 
-    return action
+    return numpy.random.choice(options, p=selProb)
 
 if __name__=="__main__":
     numActions = 5
