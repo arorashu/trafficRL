@@ -70,11 +70,6 @@ def run(options):
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
 
-        # skip everything and run according to default values
-        if (options.learn == '0'):
-            step += 1
-            continue
-
         # current traffic light index number
         i = 0
         for ID in trafficLights:
@@ -136,6 +131,18 @@ def run(options):
             # run only for every db_step and when phase is not yellow
             if (step%dbStep == 0 and currPhase[i]!=2 and currPhase[i]!=4 and currPhase[i]!=7 and currPhase[i]!=9):
 
+                # print and save current stats
+                print(avgQL[i], avgQLCurr[i], step, ID)
+                tempStats[int(ID)].append({"step": step,
+                                            "curr_qL": avgQLCurr[i],
+                                            "avgQL": avgQL[i],
+                                            "ID": ID})
+
+                # skip everything and run according to default values
+                if (options.learn == '0'):
+                    i+=1
+                    continue
+
                 if (options.stateRep == '1'):
                     # generate current step's phase vector - with queueLength
                     phaseVector[0] = int(round(max(queueLength[0], queueLength[1])/options.bracket))
@@ -152,13 +159,6 @@ def run(options):
                     phaseVector[3] = int(round(cumulativeDelay[6] + cumulativeDelay[7])/options.bracket)
                     phaseVector[4] = int(round(cumulativeDelay[2] + cumulativeDelay[6])/options.bracket)
                     phaseVector[5] = int(round(cumulativeDelay[2] + cumulativeDelay[3])/options.bracket)
-
-                # print and save current stats
-                print(avgQL[i], avgQLCurr[i], step, ID)
-                tempStats[int(ID)].append({"step": step,
-                                            "curr_qL": avgQLCurr[i],
-                                            "avgQL": avgQL[i],
-                                            "ID": ID})
 
                 # update values
                 nextAction = dbFunction(phaseVector, prePhase[i], preAction[i], ages[i], ID, options)
