@@ -48,7 +48,7 @@ def run(options):
     preAction = trafficLightsNumber*[0]
     currPhase = trafficLightsNumber*[0]
     currTime = 0
-    dbStep = 100
+    dbStep = 10
     avgQL = trafficLightsNumber*[0]
     avgQLCurr = trafficLightsNumber*[0]
     oldVeh = trafficLightsNumber*[None]
@@ -57,7 +57,7 @@ def run(options):
 
     # get age value from DB
     client = MongoClient()
-    db = client['trafficLight']
+    db = client['trafficLight2']
     i = 0
     for ID in trafficLights:
         qValues = db['qValues' + ID]
