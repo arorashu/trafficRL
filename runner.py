@@ -57,7 +57,7 @@ def run(options):
 
     # get age value from DB
     client = MongoClient()
-    db = client['trafficLight_var']
+    db = client['trafficLight2']
     i = 0
     for ID in trafficLights:
         qValues = db['qValues' + ID]
