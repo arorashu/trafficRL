@@ -48,7 +48,7 @@ def run(options):
     preAction = trafficLightsNumber*[0]
     currPhase = trafficLightsNumber*[0]
     currTime = 0
-    dbStep = 100
+    dbStep = 10
     avgQL = trafficLightsNumber*[0]
     avgQLCurr = trafficLightsNumber*[0]
     oldVeh = trafficLightsNumber*[None]
@@ -57,7 +57,7 @@ def run(options):
 
     # get age value from DB
     client = MongoClient()
-    db = client['trafficLight']
+    db = client['trafficLight_var']
     i = 0
     for ID in trafficLights:
         qValues = db['qValues' + ID]
@@ -79,9 +79,10 @@ def run(options):
             lanesUniq = []
             j = 0
             while j < len(lanes):
-                if (j%2 == 0):
-                    lanesUniq.append(lanes[j])
-                j+=1
+                lanesUniq.append(lanes[j])
+                j+=2
+                lanesUniq.append(lanes[j])
+                j+=3
             lanes = lanesUniq
 
             # get cumulative delay
@@ -130,23 +131,23 @@ def run(options):
 
             # run only for every db_step and when phase is not yellow
             if (step%dbStep == 0 and currPhase[i]!=2 and currPhase[i]!=4 and currPhase[i]!=7 and currPhase[i]!=9):
-
+            #if (step%dbStep == 0):                             #do for without yellow
                 if (options.stateRep == '1'):
                     # generate current step's phase vector - with queueLength
-                    phaseVector[0] = int(round(max(queueLength[0], queueLength[1])/options.bracket))
-                    phaseVector[1] = int(round(max(queueLength[0], queueLength[5])/options.bracket))
-                    phaseVector[2] = int(round(max(queueLength[4], queueLength[5])/options.bracket))
-                    phaseVector[3] = int(round(max(queueLength[6], queueLength[7])/options.bracket))
+                    phaseVector[0] = int(round(max(queueLength[4], queueLength[5])/options.bracket))
+                    phaseVector[1] = int(round(max(queueLength[0], queueLength[4])/options.bracket))
+                    phaseVector[2] = int(round(max(queueLength[0], queueLength[1])/options.bracket))
+                    phaseVector[3] = int(round(max(queueLength[3], queueLength[2])/options.bracket))
                     phaseVector[4] = int(round(max(queueLength[2], queueLength[6])/options.bracket))
-                    phaseVector[5] = int(round(max(queueLength[2], queueLength[3])/options.bracket))
+                    phaseVector[5] = int(round(max(queueLength[6], queueLength[7])/options.bracket))
                 elif (options.stateRep == '2'):
                     # generate current step's phase vector - with cumulativeDelay
-                    phaseVector[0] = int(round(cumulativeDelay[0] + cumulativeDelay[1])/options.bracket)
-                    phaseVector[1] = int(round(cumulativeDelay[0] + cumulativeDelay[5])/options.bracket)
-                    phaseVector[2] = int(round(cumulativeDelay[4] + cumulativeDelay[5])/options.bracket)
-                    phaseVector[3] = int(round(cumulativeDelay[6] + cumulativeDelay[7])/options.bracket)
+                    phaseVector[0] = int(round(cumulativeDelay[4] + cumulativeDelay[5])/options.bracket)
+                    phaseVector[1] = int(round(cumulativeDelay[0] + cumulativeDelay[4])/options.bracket)
+                    phaseVector[2] = int(round(cumulativeDelay[0] + cumulativeDelay[1])/options.bracket)
+                    phaseVector[3] = int(round(cumulativeDelay[3] + cumulativeDelay[2])/options.bracket)
                     phaseVector[4] = int(round(cumulativeDelay[2] + cumulativeDelay[6])/options.bracket)
-                    phaseVector[5] = int(round(cumulativeDelay[2] + cumulativeDelay[3])/options.bracket)
+                    phaseVector[5] = int(round(cumulativeDelay[6] + cumulativeDelay[7])/options.bracket)
 
                 # print and save current stats
                 print(avgQL[i], avgQLCurr[i], step, ID)
@@ -156,16 +157,16 @@ def run(options):
                                             "ID": ID})
 
                 # update values
-                nextAction = dbFunction(phaseVector, prePhase[i], preAction[i], ages[i], ID, options)
+                nextAction = dbFunction(phaseVector, prePhase[i], preAction[i], ages[i], currPhase[i], ID, options)
                 ages[i] += 1
                 prePhase[i] = phaseVector[:]
+                if(nextAction!=currPhase[i]):
+                    traci.trafficlights.setPhase(ID, nextAction)
+                    if(options.phasing=='1'):
+                        nextAction = 1
+                elif(options.phasing=='1'):
+                    nextAction = 0
                 preAction[i] = nextAction
-                if (nextAction == 1):
-                    currPhase[i] = (currPhase[i] + 1)%10
-                    traci.trafficlights.setPhase(ID, currPhase[i])
-                    currTime = 1
-                else :
-                    currTime += 1
 
             # incremetn current phase index
             i+=1
@@ -219,7 +220,8 @@ def generate_routefile(options):
     fileDir = os.path.dirname(os.path.realpath('__file__'))
     filename = os.path.join(fileDir, 'data/cross.net.xml')
     os.system("python randomTrips.py -n " + filename
-        + " --weights-prefix " + os.path.join(fileDir, 'data/cross') + " -e " + str(options.numberCars)
+        + " --weights-prefix " + os.path.join(fileDir, 'data/cross') 
+        + " -e " + str(options.numberCars)
         + " -p  4" + " -r " + os.path.join(fileDir, 'data/cross.rou.xml')
         + " --trip-attributes=\"type=\"'typedist1'\"\""
         + " --additional-file "  +  os.path.join(fileDir, 'data/type.add.xml')
