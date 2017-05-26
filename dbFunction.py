@@ -55,7 +55,7 @@ def saveStats( traffic_light_count, temp_stats ):
         run_stats.append({"run_id": run_id, "data": temp_stats[id]})
         stats[id].insert_many(run_stats)
 
-def dbFunction(curr, pre, preAction, age, ID, options):
+def dbFunction(curr, pre, preAction, age, currPhase, ID, options):
     reward = 0
     newQ = 0
     nextAction = 0
@@ -111,5 +111,8 @@ def dbFunction(curr, pre, preAction, age, ID, options):
         nextAction = eGreedy(globals.numActions, globals.E, age, currBSON)
     else:
         nextAction = softmax(globals.numActions, options.numberCars, age, currBSON)
+
+    if (options.phasing== '1'):
+        nextAction = (nextAction + currPhase)%10
 
     return nextAction
