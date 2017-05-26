@@ -7,7 +7,7 @@ import pprint
 
 pp = pprint.PrettyPrinter(indent=4)
 client = MongoClient()
-db = client['trafficLight2']
+db = client['trafficLight']
 
 # q = {"state":   "list",
 #     "action":   0,
