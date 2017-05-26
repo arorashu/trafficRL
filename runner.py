@@ -255,11 +255,13 @@ if __name__ == "__main__":
     if (options.learn == '0'):
         addFile = "data/cross_no_learn.add.xml"
 
+    lateral_resolution_width="0.8"
     # Sumo is started as a subprocess and then the python script connects and runs
     traci.start([sumoBinary, "-c", "data/cross.sumocfg",
                              "-n", "data/cross.net.xml",
                              "-a", addFile,
                              "-r", "data/cross.rou.xml",
+                             "--lateral-resolution",lateral_resolution_width,
                              "--queue-output", "queue.xml",
                              "--tripinfo-output", "tripinfo.xml"])
     init()
