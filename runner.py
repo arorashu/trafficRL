@@ -215,6 +215,8 @@ def get_options():
                          help="specify phasing scheme (1 = Fixed Phasing, 2 = Variable Phasing)")
     optParser.add_option("--action", dest="actionSel", default='1', metavar="NUM", choices= ['1', '2'],
                          help="specify action selection method (1 = epsilon greedy, 2 = softmax)")
+    optParser.add_option("--sublane", dest="sublaneWidth", default=2.5, metavar="FLOAT",
+                         help="specify width of sublane ")
     options, args = optParser.parse_args()
     return options
 
@@ -255,7 +257,10 @@ if __name__ == "__main__":
     if (options.learn == '0'):
         addFile = "data/cross_no_learn.add.xml"
 
-    lateral_resolution_width="0.8"
+    lateral_resolution_width="2.5"
+    if(float(options.sublaneWidth) != 2.5):
+        lateral_resolution_width=str(options.sublaneWidth)
+
     # Sumo is started as a subprocess and then the python script connects and runs
     traci.start([sumoBinary, "-c", "data/cross.sumocfg",
                              "-n", "data/cross.net.xml",
