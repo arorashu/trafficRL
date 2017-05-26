@@ -221,13 +221,17 @@ def get_options():
 # this uses randomtrips.py to generate a routefile with random traffic
 def generate_routefile(options):
     #generating route file using randomTrips.py
+    if (os.name == "posix"):
+        vType = '\"\'typedist1\'\"'
+    else:
+        vType = '\'typedist1\''
     fileDir = os.path.dirname(os.path.realpath('__file__'))
     filename = os.path.join(fileDir, 'data/cross.net.xml')
     os.system("python randomTrips.py -n " + filename
         + " --weights-prefix " + os.path.join(fileDir, 'data/cross')
         + " -e " + str(options.numberCars)
         + " -p  4" + " -r " + os.path.join(fileDir, 'data/cross.rou.xml')
-        + " --trip-attributes=\"type=\"\"'typedist1'\"\"\""
+        + " --trip-attributes=\"type=\"" + vType + "\"\""
         + " --additional-file "  +  os.path.join(fileDir, 'data/type.add.xml')
         + " --edge-permission emergency passenger taxi bus truck motorcycle bicycle"
         )
