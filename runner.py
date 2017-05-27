@@ -102,6 +102,13 @@ def run(options):
             if (step%dbStep == 0 and currPhase[i]!=2 and currPhase[i]!=4 and currPhase[i]!=7 and currPhase[i]!=9):
             #if (step%dbStep == 0):                             # do for without yellow
 
+                #emergency vehicle
+                for x in range(len(lanes)):
+                    listVehicles = traci.lane.getLastStepVehicleIDs(lanes[x])
+                    for veh in listVehicles:
+                        if( traci.vehicle.getTypeID(veh) == "v1" ):
+                            queueLength[x] += 5
+
                 # print and save current stats
                 print(avgQL[i], avgQLCurr[i], step, ID)
                 tempStats[int(ID)].append({"step": step,
