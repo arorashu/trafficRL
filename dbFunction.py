@@ -1,4 +1,4 @@
-from pymongo import MongoClient
+from pymongo import MongoClient, ASCENDING
 from actionSelection import eGreedy, softmax
 from learningMethods import qLearning, sarsa
 from rewardDefinitions import queueBalanceReward, delayReward
@@ -61,7 +61,7 @@ def dbFunction(curr, pre, preAction, age, currPhase, ID, options):
     nextAction = 0
 
     qValues = db['qValues' + ID]
-    currBSON = qValues.find({"state": curr})
+    currBSON = qValues.find({"state": curr}).sort("action", ASCENDING)
     temp = []
     if (currBSON.count() == 0):
         for i in range(0, globals.numActions):
@@ -97,12 +97,18 @@ def dbFunction(curr, pre, preAction, age, currPhase, ID, options):
         if (options.actionSel=='1'):
             nextQ = currBSON[eGreedy(globals.numActions, globals.E, age, currBSON)]['qVal']
         else:
-            nextQ = currBSON[softmax(globals.numActions, globals.E, age, currBSON)]['qVal']
+            nextQ = currBSON[softmax(globals.numActions, options.numberCars, age, currBSON)]['qVal']
         newQ = sarsa(currQ, globals.alpha, globals.gamma, reward, nextQ)
 
     qValues.find_one_and_update({"state": pre, "action": preAction}, {'$set': {"qVal": newQ}})
 
-    currBSON = qValues.find({"state": curr})
+    currBSON = qValues.find({"state": curr}).sort("action", ASCENDING)
+
+    # converts currBSON from cursor to list
+    tempBSON = []
+    for c in currBSON:
+        tempBSON.append(c)
+    currBSON = tempBSON
 
     # nextAction = 0 or 1 (0 = continue same phase, 1 = go to next phase)
     # i.e. index of next phase = (currPhaseIndex + action) % N
@@ -113,6 +119,6 @@ def dbFunction(curr, pre, preAction, age, currPhase, ID, options):
         nextAction = softmax(globals.numActions, options.numberCars, age, currBSON)
 
     if (options.phasing== '1'):
-        nextAction = (nextAction + currPhase)%10
+        nextAction = (nextAction + currPhase)%6
 
     return nextAction
