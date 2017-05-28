@@ -11,9 +11,9 @@ import subprocess
 import random
 from collections import Counter
 from pymongo import MongoClient
-from dbFunction import dbFunction, initTrafficLight, initRunCount, saveStats
+from dbFunction import dbFunction, initTrafficLight, initRunCount, saveStats, getRunCount
 from globals import init
-from helper import updateVehDistribution, plotGraph, savePlot
+from helper import updateVehDistribution, plotGraph, savePlot, generate_routefile
 
 
 # we need to import python modules from the $SUMO_HOME/tools directory
@@ -29,10 +29,10 @@ except ImportError:
 
 import traci
 client = MongoClient()
-db = client['trafficLight']
 
 def run(options):
-    initRunCount()
+    initRunCount(options)
+    db = client[options.dbName]
     tempStats = []
     temp = []
 
@@ -109,7 +109,7 @@ def run(options):
             if (step%dbStep == 0):                             # do for without yellow
 
                 # print and save current stats
-                print(avgQL[i], avgQLCurr[i], step, ID, "AvgQLs, step, ID")
+                # print(avgQL[i], avgQLCurr[i], step, ID, "AvgQLs, step, ID")
                 tempStats[int(ID)].append({"step": step,
                                             "curr_qL": avgQLCurr[i],
                                             "avgQL": avgQL[i],
@@ -195,17 +195,19 @@ def run(options):
     avgQLTotal = 0
     i = 0
     for avgQLC in avgQL:
-        print(avgQLC, "Final", i)
+        # print(avgQLC, "Final", i)
         i += 1
         avgQLTotal += avgQLC
     avgQLTotal = avgQLTotal/(trafficLightsNumber*1.0)
-    print(avgQLTotal, "Final Total")
+    # print(avgQLTotal, "Final Total")
 
     saveStats(trafficLightsNumber, tempStats)
-    savePlot(options)
+    savePlot(options.dbName + str(getRunCount()))
 
     traci.close()
     sys.stdout.flush()
+
+    return avgQLTotal
 
 # this gets the input parameters specified to the program
 def get_options():
@@ -226,25 +228,6 @@ def get_options():
                          help="specify action selection method (1 = epsilon greedy, 2 = softmax)")
     options, args = optParser.parse_args()
     return options
-
-# this uses randomtrips.py to generate a routefile with random traffic
-def generate_routefile(options):
-    #generating route file using randomTrips.py
-    if (os.name == "posix"):
-        vType = '\"\'typedist1\'\"'
-    else:
-        vType = '\'typedist1\''
-    fileDir = os.path.dirname(os.path.realpath('__file__'))
-    filename = os.path.join(fileDir, 'data/cross.net.xml')
-    os.system("python randomTrips.py -n " + filename
-        + " --weights-prefix " + os.path.join(fileDir, 'data/cross')
-        + " -e " + str(options.numberCars)
-        + " -p  4" + " -r " + os.path.join(fileDir, 'data/cross.rou.xml')
-        + " --trip-attributes=\"type=\"" + vType + "\"\""
-        + " --additional-file "  +  os.path.join(fileDir, 'data/type.add.xml')
-        + " --edge-permission emergency passenger taxi bus truck motorcycle bicycle"
-        )
-
 
 # this is the main entry point of this script
 if __name__ == "__main__":
