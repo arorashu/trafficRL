@@ -8,4 +8,6 @@ queue.xml
 trips.trips.xml
 cross.rou.xml
 cross.rou.alt.xml
+cross.src.xml
+cross.dst.xml
 *.pyc
