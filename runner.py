@@ -13,6 +13,8 @@ from collections import Counter
 from pymongo import MongoClient
 from dbFunction import dbFunction, initTrafficLight, initRunCount, saveStats
 from globals import init
+from helper import updateVehDistribution, plotGraph, savePlot
+
 
 # we need to import python modules from the $SUMO_HOME/tools directory
 try:
@@ -96,6 +98,9 @@ def run(options):
             # get average queue length till now
             avgQL[i] = (avgQL[i]*step + avgQLCurr[i])/((step+1)*1.0)
 
+            if(i == 0):
+                plotGraph(step, avgQL[i])
+
             options.bracket = int(options.bracket)
             currPhase[i] = traci.trafficlights.getPhase(ID)
 
@@ -104,7 +109,7 @@ def run(options):
             if (step%dbStep == 0):                             # do for without yellow
 
                 # print and save current stats
-                # print(avgQL[i], avgQLCurr[i], step, ID, "AvgQLs, step, ID")
+                print(avgQL[i], avgQLCurr[i], step, ID, "AvgQLs, step, ID")
                 tempStats[int(ID)].append({"step": step,
                                             "curr_qL": avgQLCurr[i],
                                             "avgQL": avgQL[i],
@@ -197,6 +202,7 @@ def run(options):
     print(avgQLTotal, "Final Total")
 
     saveStats(trafficLightsNumber, tempStats)
+    savePlot(options)
 
     traci.close()
     sys.stdout.flush()

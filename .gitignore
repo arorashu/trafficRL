@@ -1,5 +1,6 @@
 embedded/
 plain/
+outputs/
 data/mylog.txt
 embedded.py
 testsuite*
@@ -8,6 +9,4 @@ queue.xml
 trips.trips.xml
 cross.rou.xml
 cross.rou.alt.xml
-cross.src.xml
-cross.dst.xml
 *.pyc
