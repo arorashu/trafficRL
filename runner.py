@@ -76,6 +76,7 @@ def run(options):
             # get lanes for each traffic light
             lanes = traci.trafficlights.getControlledLanes(ID)
             lanesUniq = []
+            # get unique lanes
             j = 0
             while j < len(lanes):
                 lanesUniq.append(lanes[j])
@@ -99,11 +100,11 @@ def run(options):
             currPhase[i] = traci.trafficlights.getPhase(ID)
 
             # run only for every db_step and when phase is not yellow
-            if (step%dbStep == 0 and currPhase[i]!=2 and currPhase[i]!=4 and currPhase[i]!=7 and currPhase[i]!=9):
-            #if (step%dbStep == 0):                             # do for without yellow
+            # if (step%dbStep == 0 and currPhase[i]!=2 and currPhase[i]!=4 and currPhase[i]!=7 and currPhase[i]!=9):
+            if (step%dbStep == 0):                             # do for without yellow
 
                 # print and save current stats
-                print(avgQL[i], avgQLCurr[i], step, ID)
+                # print(avgQL[i], avgQLCurr[i], step, ID, "AvgQLs, step, ID")
                 tempStats[int(ID)].append({"step": step,
                                             "curr_qL": avgQLCurr[i],
                                             "avgQL": avgQL[i],
@@ -162,14 +163,16 @@ def run(options):
 
                 # update values
                 nextAction = dbFunction(phaseVector, prePhase[i], preAction[i], ages[i], currPhase[i], ID, options)
-                ages[i] += 1
+                ages[i] += 0.01
                 prePhase[i] = phaseVector[:]
-                if(nextAction!=currPhase[i]):
-                    traci.trafficlights.setPhase(ID, nextAction)
-                    if(options.phasing=='1'):
-                        nextAction = 1
-                elif(options.phasing=='1'):
-                    nextAction = 0
+                #if(nextAction!=currPhase[i]):
+                traci.trafficlights.setPhase(ID, nextAction)
+
+                if(options.phasing=='1'):
+                    if(nextAction!=currPhase[i]):
+                        nextAction=1
+                    else:
+                        nextAction=0
                 preAction[i] = nextAction
 
             # increment traffic light index
