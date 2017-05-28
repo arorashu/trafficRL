@@ -11,20 +11,31 @@ import numpy
 def eGreedy(numActions, E, age, currBSON):
     epsilon = math.exp(-1*E*age)
     rand = random.uniform(0,1)
-
+    #print(epsilon-rand, "epsilon - rand")
     """ split into 2 probability ranges separated by epsilon ie 0<=p<=epsilon and epsilon<p<=1
         if rand<=epsilon, random action
         else greedy action
     """
+    a = random.randint(0,numActions-1)
+    # print(a, "rand")
+
+    # Flag for checking if every qVal is equal
+    flag = True
     if rand<=epsilon:
-        return random.randint(0,numActions-1)
+        return a
     else:
         nextMaxQ = currBSON[0]['qVal']
         greedyAction = 0
         for i in currBSON:
+            # print(i, "currG")
             if nextMaxQ < i['qVal']:
                 nextMaxQ = i['qVal']
                 greedyAction = i['action']
+                flag = False
+        # print(greedyAction, "greedy")
+        if(flag):
+            # print(currBSON)
+            return a
         return greedyAction
 
 def softmax(numActions, numberCars, age, currBSON):
