@@ -7,7 +7,6 @@ import pprint
 
 pp = pprint.PrettyPrinter(indent=4)
 client = MongoClient()
-db = client['trafficLight']
 
 # q = {"state":   "list",
 #     "action":   0,
@@ -30,8 +29,10 @@ def initTrafficLight(ID):
     qValues.insert_many(temp)
 
 
-def initRunCount():
+def initRunCount(options):
     #noOfRuns to store run statistics
+    global db
+    db = client[options.dbName]
     nor = db['noOfRuns']
     if ( nor.count() == 0 ):
         nor.insert_one({"count" : 0});
@@ -118,7 +119,7 @@ def dbFunction(curr, pre, preAction, age, currPhase, ID, options):
     else:
         nextAction = softmax(globals.numActions, options.numberCars, age, currBSON)
 
-    if (options.phasing== '1'):
-        nextAction = (nextAction + currPhase)%6
+    if (options.phasing=='1'):
+        nextAction = (nextAction + currPhase)%10
 
     return nextAction
