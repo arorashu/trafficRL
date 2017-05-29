@@ -198,12 +198,11 @@ def run(options):
                     else:
                         nextAction=0
                 else:
-                    print("phase 2")
                     if(nextAction != currPhase[i]):
                         oldRGYState = traci.trafficlights.getRedYellowGreenState(ID)
                         traci.trafficlights.setPhase(ID, nextAction)
                         newRGYState = traci.trafficlights.getRedYellowGreenState(ID)
-                        print(oldRGYState, newRGYState, "old new")
+                        # print(oldRGYState, newRGYState, "old new")
 
                         midRGYState = ""
                         for k, c in enumerate(oldRGYState):
@@ -213,7 +212,7 @@ def run(options):
                                 midRGYState += 'g'
                             else:
                                 midRGYState += c
-                        print(midRGYState, "mid")
+                        # print(midRGYState, "mid")
 
                         traci.trafficlights.setRedYellowGreenState(ID, midRGYState)
                         tempCounter = 5
@@ -222,10 +221,7 @@ def run(options):
                             tempCounter -=1
                         traci.trafficlights.setProgram(ID, 'custom2')
                         traci.trafficlights.setPhase(ID, nextAction)
-                        newRGYState = traci.trafficlights.getRedYellowGreenState(ID)
-                        print(newRGYState, "new new")
                     else:
-                        print (nextAction, currPhase[i],i, "next curr i")
                         traci.trafficlights.setPhase(ID, nextAction)
 
                 preAction[i] = nextAction

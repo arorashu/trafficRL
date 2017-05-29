@@ -253,7 +253,7 @@ if __name__ == "__main__":
         options.dbName = getDBName(options)
         traci.start([sumoBinary, "-c", "data/cross.sumocfg",
                                  "-n", "data/cross.net.xml",
-                                 "-a", "data/cross.add.xml",
+                                 "-a", "data/cross_variable.add.xml",
                                  "-r", "data/cross.rou.xml",
                                  "--queue-output", "queue.xml",
                                  "--tripinfo-output", "tripinfo.xml",
@@ -272,7 +272,7 @@ if __name__ == "__main__":
         options.dbName = getDBName(options)
         traci.start([sumoBinary, "-c", "data/cross.sumocfg",
                                  "-n", "data/cross.net.xml",
-                                 "-a", "data/cross.add.xml",
+                                 "-a", "data/cross_variable.add.xml",
                                  "-r", "data/cross.rou.xml",
                                  "--queue-output", "queue.xml",
                                  "--tripinfo-output", "tripinfo.xml",
@@ -291,7 +291,7 @@ if __name__ == "__main__":
         options.dbName = getDBName(options)
         traci.start([sumoBinary, "-c", "data/cross.sumocfg",
                                  "-n", "data/cross.net.xml",
-                                 "-a", "data/cross.add.xml",
+                                 "-a", "data/cross_variable.add.xml",
                                  "-r", "data/cross.rou.xml",
                                  "--queue-output", "queue.xml",
                                  "--tripinfo-output", "tripinfo.xml",
@@ -310,7 +310,7 @@ if __name__ == "__main__":
         options.dbName = getDBName(options)
         traci.start([sumoBinary, "-c", "data/cross.sumocfg",
                                  "-n", "data/cross.net.xml",
-                                 "-a", "data/cross.add.xml",
+                                 "-a", "data/cross_variable.add.xml",
                                  "-r", "data/cross.rou.xml",
                                  "--queue-output", "queue.xml",
                                  "--tripinfo-output", "tripinfo.xml",
@@ -329,7 +329,7 @@ if __name__ == "__main__":
         options.dbName = getDBName(options)
         traci.start([sumoBinary, "-c", "data/cross.sumocfg",
                                  "-n", "data/cross.net.xml",
-                                 "-a", "data/cross.add.xml",
+                                 "-a", "data/cross_variable.add.xml",
                                  "-r", "data/cross.rou.xml",
                                  "--queue-output", "queue.xml",
                                  "--tripinfo-output", "tripinfo.xml",
@@ -348,7 +348,7 @@ if __name__ == "__main__":
         options.dbName = getDBName(options)
         traci.start([sumoBinary, "-c", "data/cross.sumocfg",
                                  "-n", "data/cross.net.xml",
-                                 "-a", "data/cross.add.xml",
+                                 "-a", "data/cross_variable.add.xml",
                                  "-r", "data/cross.rou.xml",
                                  "--queue-output", "queue.xml",
                                  "--tripinfo-output", "tripinfo.xml",
@@ -367,7 +367,7 @@ if __name__ == "__main__":
         options.dbName = getDBName(options)
         traci.start([sumoBinary, "-c", "data/cross.sumocfg",
                                  "-n", "data/cross.net.xml",
-                                 "-a", "data/cross.add.xml",
+                                 "-a", "data/cross_variable.add.xml",
                                  "-r", "data/cross.rou.xml",
                                  "--queue-output", "queue.xml",
                                  "--tripinfo-output", "tripinfo.xml",
@@ -386,7 +386,7 @@ if __name__ == "__main__":
         options.dbName = getDBName(options)
         traci.start([sumoBinary, "-c", "data/cross.sumocfg",
                                  "-n", "data/cross.net.xml",
-                                 "-a", "data/cross.add.xml",
+                                 "-a", "data/cross_variable.add.xml",
                                  "-r", "data/cross.rou.xml",
                                  "--queue-output", "queue.xml",
                                  "--tripinfo-output", "tripinfo.xml",
