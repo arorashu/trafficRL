@@ -119,7 +119,7 @@ def dbFunction(curr, pre, preAction, age, currPhase, ID, options):
     else:
         nextAction = softmax(globals.numActions, options.numberCars, age, currBSON)
 
-    if (options.phasing== '1'):
-        nextAction = (nextAction + currPhase)%6
+    if (options.phasing=='1'):
+        nextAction = (nextAction + currPhase)%10
 
     return nextAction

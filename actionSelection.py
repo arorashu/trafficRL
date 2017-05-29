@@ -13,7 +13,7 @@ def eGreedy(numActions, E, age, currBSON):
     epsilon = math.exp(-1*E*age)
     randNum = random.uniform(0,1)
 
-    print(epsilon, randNum, "epsilon and randNum", bool(randNum>epsilon))    
+    # print(epsilon, randNum, "epsilon and randNum", bool(randNum>epsilon))    
 
     """ split into 2 probability ranges separated by epsilon ie 0<=p<=epsilon and epsilon<p<=1
         if randNum<=epsilon, random action
@@ -51,7 +51,7 @@ def eGreedy(numActions, E, age, currBSON):
                 if(i['qVal']==nextMaxQ):
                     selAction.append(i['action'])
             greedyAction = selAction[random.randint(0,len(selAction)-1)]
-            
+
             if (len(selAction)>1):
                 print("new segment", greedyAction)
 
