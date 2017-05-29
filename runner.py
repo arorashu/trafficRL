@@ -118,6 +118,13 @@ def run(options):
             # if (step%dbStep == 0 and currPhase[i]!=2 and currPhase[i]!=4 and currPhase[i]!=7 and currPhase[i]!=9):
             if (step%dbStep == 0):                             # do for without yellow
 
+                #emergency vehicle
+                for x in range(len(lanes)):
+                    listVehicles = traci.lane.getLastStepVehicleIDs(lanes[x])
+                    for veh in listVehicles:
+                        if( traci.vehicle.getTypeID(veh) == "v1" ):
+                            queueLength[x] += 5
+
                 # print and save current stats
                 # print(avgQL[i], avgQLCurr[i], step, ID, "AvgQLs, step, ID")
                 tempStats[int(ID)].append({"step": step,
@@ -236,6 +243,8 @@ def get_options():
                          help="specify phasing scheme (1 = Fixed Phasing, 2 = Variable Phasing)")
     optParser.add_option("--action", dest="actionSel", default='1', metavar="NUM", choices= ['1', '2'],
                          help="specify action selection method (1 = epsilon greedy, 2 = softmax)")
+    optParser.add_option("--sublane", dest="sublaneNumber", default=2, metavar="FLOAT",
+                         help="specify number of sublanes per edge (max=6) ")
     options, args = optParser.parse_args()
     return options
 
@@ -257,11 +266,19 @@ if __name__ == "__main__":
     if (options.learn == '0'):
         addFile = "data/cross_no_learn.add.xml"
 
+    edgeWidth=5
+    lateral_resolution_width=2.5
+    if(int(options.sublaneNumber) <= 6.0):
+        lateral_resolution_width=float(edgeWidth/int(options.sublaneNumber))
+
+    lateral_resolution_width=str(lateral_resolution_width)
+
     # Sumo is started as a subprocess and then the python script connects and runs
     traci.start([sumoBinary, "-c", "data/cross.sumocfg",
                              "-n", "data/cross.net.xml",
                              "-a", addFile,
                              "-r", "data/cross.rou.xml",
+                             "--lateral-resolution",lateral_resolution_width,
                              "--queue-output", "queue.xml",
                              "--tripinfo-output", "tripinfo.xml"])
     init()

@@ -3,7 +3,7 @@ import sys
 import optparse
 import subprocess
 import random
-from globals import init
+import globals
 from helper import updateVehDistribution, generate_routefile, getDBName
 from runner import run
 
@@ -242,6 +242,7 @@ if __name__ == "__main__":
 
     ## Variable Phasing
     options.phasing = '2'
+    globals.numActions = 6
 
     if (options.start <= 9 and options.end >= 9):
         # 9. stateRep = queue, learning = Q-learn, action selection = e-greedy
