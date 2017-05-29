@@ -11,8 +11,10 @@ import subprocess
 import random
 from collections import Counter
 from pymongo import MongoClient
-from dbFunction import dbFunction, initTrafficLight, initRunCount, saveStats
+from dbFunction import dbFunction, initTrafficLight, initRunCount, saveStats, getRunCount
 from globals import init
+from helper import updateVehDistribution, plotGraph, savePlot, generate_routefile
+
 
 # we need to import python modules from the $SUMO_HOME/tools directory
 try:
@@ -27,10 +29,10 @@ except ImportError:
 
 import traci
 client = MongoClient()
-db = client['trafficLight']
 
 def run(options):
-    initRunCount()
+    initRunCount(options)
+    db = client[options.dbName]
     tempStats = []
     temp = []
 
@@ -55,6 +57,7 @@ def run(options):
     oldVeh = trafficLightsNumber*[None]
     cumuDelay = trafficLightsNumber*[None]
     ages = trafficLightsNumber*[0]
+    avgPlot = 0
 
     # get age value from DB
     i = 0
@@ -65,7 +68,7 @@ def run(options):
         i+=1
 
     # execute the TraCI control loop
-    step = 0
+    step = 1
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
 
@@ -96,12 +99,31 @@ def run(options):
             # get average queue length till now
             avgQL[i] = (avgQL[i]*step + avgQLCurr[i])/((step+1)*1.0)
 
+            # call plot graph with avg ql
+            if(i == trafficLightsNumber-1 and step%(dbStep*10) == 0):
+                avgPlot /= dbStep*10
+                plotGraph(step/(dbStep*10), avgPlot)
+                avgPlot = 0
+            elif(i == trafficLightsNumber-1):
+                avgQLTotal = 0
+                for avgQLC in avgQLCurr:
+                    avgQLTotal += avgQLC
+                avgQLTotal = avgQLTotal/(trafficLightsNumber*1.0)
+                avgPlot += avgQLTotal
+
             options.bracket = int(options.bracket)
             currPhase[i] = traci.trafficlights.getPhase(ID)
 
             # run only for every db_step and when phase is not yellow
             # if (step%dbStep == 0 and currPhase[i]!=2 and currPhase[i]!=4 and currPhase[i]!=7 and currPhase[i]!=9):
             if (step%dbStep == 0):                             # do for without yellow
+
+                #emergency vehicle
+                for x in range(len(lanes)):
+                    listVehicles = traci.lane.getLastStepVehicleIDs(lanes[x])
+                    for veh in listVehicles:
+                        if( traci.vehicle.getTypeID(veh) == "v1" ):
+                            queueLength[x] += 5
 
                 # print and save current stats
                 # print(avgQL[i], avgQLCurr[i], step, ID, "AvgQLs, step, ID")
@@ -190,16 +212,19 @@ def run(options):
     avgQLTotal = 0
     i = 0
     for avgQLC in avgQL:
-        print(avgQLC, "Final", i)
+        # print(avgQLC, "Final", i)
         i += 1
         avgQLTotal += avgQLC
     avgQLTotal = avgQLTotal/(trafficLightsNumber*1.0)
-    print(avgQLTotal, "Final Total")
+    # print(avgQLTotal, "Final Total")
 
     saveStats(trafficLightsNumber, tempStats)
+    savePlot(options.dbName + str(getRunCount()))
 
     traci.close()
     sys.stdout.flush()
+
+    return avgQLTotal
 
 # this gets the input parameters specified to the program
 def get_options():
@@ -223,27 +248,6 @@ def get_options():
     options, args = optParser.parse_args()
     return options
 
-fringeFactor=10
-# this uses randomtrips.py to generate a routefile with random traffic
-def generate_routefile(options):
-    #generating route file using randomTrips.py
-    if (os.name == "posix"):
-        vType = '\"\'typedist1\'\"'
-    else:
-        vType = '\'typedist1\''
-    fileDir = os.path.dirname(os.path.realpath('__file__'))
-    filename = os.path.join(fileDir, 'data/cross.net.xml')
-    os.system("python randomTrips.py -n " + filename
-        + " --weights-prefix " + os.path.join(fileDir, 'data/cross')
-        + " -e " + str(options.numberCars)
-        + " -p  4" + " -r " + os.path.join(fileDir, 'data/cross.rou.xml')
-        + " --fringe-factor " + str(fringeFactor) 
-        + " --trip-attributes=\"type=\"" + vType + "\"\""
-        + " --additional-file "  +  os.path.join(fileDir, 'data/type.add.xml')
-        + " --edge-permission emergency passenger taxi bus truck motorcycle bicycle"
-        )
-
-
 # this is the main entry point of this script
 if __name__ == "__main__":
     options = get_options()
@@ -263,10 +267,10 @@ if __name__ == "__main__":
         addFile = "data/cross_no_learn.add.xml"
 
     edgeWidth=5
-    lateral_resolution_width=2.5    
+    lateral_resolution_width=2.5
     if(int(options.sublaneNumber) <= 6.0):
         lateral_resolution_width=float(edgeWidth/int(options.sublaneNumber))
-    
+
     lateral_resolution_width=str(lateral_resolution_width)
 
     # Sumo is started as a subprocess and then the python script connects and runs

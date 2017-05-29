@@ -1,12 +1,12 @@
 <additional>
     <vTypeDistribution id="typedist1">
-		  <vType id="v1" maxSpeed="60" vClass="emergency" probability="0.1" carFollowModel="Krauss" accel="5.6" decel="4.0" sigma="0.5" lcStrategic="10.0" lcCooperative="0.2"/>
+		  <vType id="v1" maxSpeed="60" vClass="emergency" probability="0.02" carFollowModel="Krauss" accel="5.6" decel="4.0" sigma="0.5" lcStrategic="10.0" lcCooperative="0.2" guiShape="emergency"/>
 		  <vType id="v2" maxSpeed="50" vClass="passenger" probability="0.31" length="5" 
 		  	carFollowModel="Krauss" accel="4.5" decel="4.0" sigma="0.7" lcStrategic="6" lcCooperative="0.4"/>
 		  <vType id="v3" maxSpeed="50" vClass="taxi" probability="0.15" length="3" carFollowModel="Krauss" accel="4.5" decel="4.0" sigma="0.7" lcStrategic="6" lcCooperative="0.4"/>
-		  <vType id="v4" maxSpeed="40" vClass="bus" probability="0.1" length="7" carFollowModel="Krauss" accel="4.0" decel="3.5" sigma="0.8" lcStrategic="4" lcCooperative="0.1"/>
+		  <vType id="v4" maxSpeed="40" vClass="bus" probability="0.1" length="7" carFollowModel="Krauss" accel="4.0" decel="3.5" sigma="0.8" lcStrategic="4" lcCooperative="0.1" guiShape="bus/city"/>
 		  <vType id="v5" maxSpeed="40" vClass="truck" probability="0.05" length="7" carFollowModel="Krauss" accel="4.0" decel="3.5" sigma="0.8" lcStrategic="4" lcCooperative="0.1"/>
-		  <vType id="v6" maxSpeed="55" vClass="motorcycle" probability="0.45" carFollowModel="Krauss" accel="4.0" decel="3.5" sigma="0.9" lcStrategic="10.0" lcCooperative="0.2"/>
-		  <vType id="v7" maxSpeed="15" vClass="bicycle" probability="0.05"/>
+		  <vType id="v6" maxSpeed="55" vClass="motorcycle" probability="0.45" carFollowModel="Krauss" accel="4.0" decel="3.5" sigma="0.9" lcStrategic="10.0" lcCooperative="0.2" guiShape="motorcycle"/>
+		  <vType id="v7" maxSpeed="15" vClass="bicycle" probability="0.13"/>
 	</vTypeDistribution>
 </additional>
