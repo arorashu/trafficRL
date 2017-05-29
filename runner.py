@@ -233,7 +233,7 @@ def get_options():
                          default=False, help="run the commandline version of sumo")
     optParser.add_option("--cars", "-C", dest="numberCars", default=100000, metavar="NUM",
                          help="specify the number of cars generated for simulation")
-    optParser.add_option("--bracket", dest="bracket", default=10, metavar="BRACKET",
+    optParser.add_option("--bracket", dest="bracket", default=4, metavar="BRACKET",
                          help="specify the number with which to partition the range of queue length/cumulative delay")
     optParser.add_option("--learning", dest="learn", default='1', metavar="NUM", choices= ['0', '1', '2'],
                          help="specify learning method (0 = No Learning, 1 = Q-Learning, 2 = SARSA)")
@@ -281,5 +281,5 @@ if __name__ == "__main__":
                              "--lateral-resolution",lateral_resolution_width,
                              "--queue-output", "queue.xml",
                              "--tripinfo-output", "tripinfo.xml"])
-    init()
+    init(options)
     run(options)
