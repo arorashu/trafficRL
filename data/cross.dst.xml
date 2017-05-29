@@ -1,12 +1,12 @@
 <edgedata>
-   <interval begin="0" end="10"/>
-     <edge id="gneE0" value="0.125"/>
-     <edge id="gneE3" value="0.125"/>
-     <edge id="gneE5" value="0.125"/>
-     <edge id="gneE7" value="0.125"/>
-     <edge id="gneE10" value="0.125"/>
-     <edge id="gneE13" value="0.125"/>
-     <edge id="gneE15" value="0.125"/>
-     <edge id="gneE17" value="0.125"/>
+   <interval begin="0" end="10">
+     <edge id="gneE0" value="0.025" />
+     <edge id="gneE3" value="0.004799999999999999" />
+     <edge id="gneE5" value="0.057100000000000005" />
+     <edge id="gneE7" value="0.1119" />
+     <edge id="gneE10" value="0.024400000000000005" />
+     <edge id="gneE13" value="0.28219999999999995" />
+     <edge id="gneE15" value="0.1713" />
+     <edge id="gneE17" value="0.32330000000000003" />
    </interval>
- </edgedata>
+</edgedata>

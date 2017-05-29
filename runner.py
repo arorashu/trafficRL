@@ -100,9 +100,9 @@ def run(options):
             avgQL[i] = (avgQL[i]*step + avgQLCurr[i])/((step+1)*1.0)
 
             # call plot graph with avg ql every 10*dbDtep
-            if(i == trafficLightsNumber-1 and step%(dbStep*10) == 0):
+            if(i == trafficLightsNumber-1 and step%(dbStep*30) == 0):
                 avgPlot /= dbStep*10
-                plotGraph(step/(dbStep*10), avgPlot)
+                plotGraph(step/(dbStep*30), avgPlot)
                 avgPlot = 0
             elif(i == trafficLightsNumber-1):
                 avgQLTotal = 0
