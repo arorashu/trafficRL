@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 26-05-2017 23:26:01 by Netedit Version 0.29.0
+<!-- generated on 28-05-2017 18:06:38 by Netedit Version 0.29.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netedit.exeConfiguration.xsd">
@@ -204,7 +204,7 @@
         <lane id=":2_11_1" index="1" speed="13.90" length="23.32" width="5.00" shape="1.95,11.94 1.95,-11.39"/>
     </edge>
     <edge id=":2_13" function="internal">
-        <lane id=":2_13_0" index="0" speed="13.90" length="13.51" width="5.00" shape="1.95,11.94 1.05,5.72 -1.61,1.28 -3.38,0.22"/>
+        <lane id=":2_13_0" index="0" speed="13.90" length="13.51" width="5.00" shape="1.95,11.94 1.05,5.72 -1.62,1.28 -3.38,0.22"/>
     </edge>
     <edge id=":2_14" function="internal">
         <lane id=":2_14_0" index="0" speed="13.90" length="7.45" width="5.00" shape="1.95,11.94 0.67,10.03 -0.61,9.39 -1.88,10.03 -3.15,11.94"/>
@@ -304,7 +304,7 @@
         <lane id="0/0to1/0_0" index="0" speed="13.90" length="377.79" width="5.00" shape="11.06,7.92 388.85,7.72"/>
         <lane id="0/0to1/0_1" index="1" speed="13.90" length="377.79" width="5.00" shape="11.05,2.82 388.85,2.62"/>
     </edge>
-    <edge id="0/1to0/0" from="0" to="2" priority="-1">
+    <edge id="0/1to0/0" from="0" to="2" priority="-1" spreadType="center" shape="5.09,399.74 4.48,0.21">
         <lane id="0/1to0/0_0" index="0" speed="13.90" length="376.14" width="5.00" shape="7.62,388.07 7.05,11.93"/>
         <lane id="0/1to0/0_1" index="1" speed="13.90" length="376.14" width="5.00" shape="2.52,388.08 1.95,11.94"/>
     </edge>
