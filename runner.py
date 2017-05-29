@@ -57,6 +57,7 @@ def run(options):
     oldVeh = trafficLightsNumber*[None]
     cumuDelay = trafficLightsNumber*[None]
     ages = trafficLightsNumber*[0]
+    avgPlot = 0
 
     # get age value from DB
     i = 0
@@ -67,7 +68,7 @@ def run(options):
         i+=1
 
     # execute the TraCI control loop
-    step = 0
+    step = 1
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
 
@@ -99,12 +100,16 @@ def run(options):
             avgQL[i] = (avgQL[i]*step + avgQLCurr[i])/((step+1)*1.0)
 
             # call plot graph with avg ql
-            if(i == trafficLightsNumber-1):
+            if(i == trafficLightsNumber-1 and step%(dbStep*10) == 0):
+                avgPlot /= dbStep*10
+                plotGraph(step/(dbStep*10), avgPlot)
+                avgPlot = 0
+            elif(i == trafficLightsNumber-1):
                 avgQLTotal = 0
                 for avgQLC in avgQLCurr:
                     avgQLTotal += avgQLC
                 avgQLTotal = avgQLTotal/(trafficLightsNumber*1.0)
-                plotGraph(step, avgQLTotal)
+                avgPlot += avgQLTotal
 
             options.bracket = int(options.bracket)
             currPhase[i] = traci.trafficlights.getPhase(ID)
