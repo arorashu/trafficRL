@@ -4,6 +4,7 @@ import optparse
 import subprocess
 import random
 import globals
+from globals import init
 from helper import updateVehDistribution, generate_routefile, getDBName
 from runner import run
 
@@ -82,7 +83,7 @@ if __name__ == "__main__":
                                  "--duration-log.statistics", "true",
                                  "--output-prefix", 'outputs/logs/' + options.dbName
                                  ])
-        init()
+        init(options)
         print("Final Average QL for no learning : ", run(options))
 
     ## Fixed Phasing
@@ -104,7 +105,7 @@ if __name__ == "__main__":
                                  "--duration-log.statistics", "true",
                                  "--output-prefix", 'outputs/logs/' + options.dbName
                                  ])
-        init()
+        init(options)
         print("Average QL for Q-learning with state=queue and actSel=e-greedy FIXED: ", run(options))
 
     if (options.start <= 2 and options.end >= 2):
@@ -123,7 +124,7 @@ if __name__ == "__main__":
                                  "--duration-log.statistics", "true",
                                  "--output-prefix", 'outputs/logs/' + options.dbName
                                  ])
-        init()
+        init(options)
         print("Average QL for Q-learning with state=queue and actSel=softmax FIXED: ", run(options))
 
     if (options.start <= 3 and options.end >= 3):
@@ -142,7 +143,7 @@ if __name__ == "__main__":
                                  "--duration-log.statistics", "true",
                                  "--output-prefix", 'outputs/logs/' + options.dbName
                                  ])
-        init()
+        init(options)
         print("Average QL for SARSA with state=queue and actSel=e-greedy FIXED: ", run(options))
 
     if (options.start <= 4 and options.end >= 4):
@@ -161,7 +162,7 @@ if __name__ == "__main__":
                                  "--duration-log.statistics", "true",
                                  "--output-prefix", 'outputs/logs/' + options.dbName
                                  ])
-        init()
+        init(options)
         print("Average QL for SARSA with state=queue and actSel=softmax FIXED: ", run(options))
 
     if (options.start <= 5 and options.end >= 5):
@@ -180,7 +181,7 @@ if __name__ == "__main__":
                                  "--duration-log.statistics", "true",
                                  "--output-prefix", 'outputs/logs/' + options.dbName
                                  ])
-        init()
+        init(options)
         print("Average QL for Q-learning with state=delay and actSel=e-greedy FIXED: ", run(options))
 
     if (options.start <= 6 and options.end >= 6):
@@ -199,7 +200,7 @@ if __name__ == "__main__":
                                  "--duration-log.statistics", "true",
                                  "--output-prefix", 'outputs/logs/' + options.dbName
                                  ])
-        init()
+        init(options)
         print("Average QL for Q-learning with state=delay and actSel=softmax FIXED: ", run(options))
 
     if (options.start <= 7 and options.end >= 7):
@@ -218,7 +219,7 @@ if __name__ == "__main__":
                                  "--duration-log.statistics", "true",
                                  "--output-prefix", 'outputs/logs/' + options.dbName
                                  ])
-        init()
+        init(options)
         print("Average QL for SARSA with state=delay and actSel=e-greedy FIXED : ", run(options))
 
     if (options.start <= 8 and options.end >= 8):
@@ -237,7 +238,7 @@ if __name__ == "__main__":
                                  "--duration-log.statistics", "true",
                                  "--output-prefix", 'outputs/logs/' + options.dbName
                                  ])
-        init()
+        init(options)
         print("Average QL for SARSA with state=delay and actSel=softmax FIXED: ", run(options))
 
     ## Variable Phasing
@@ -260,7 +261,7 @@ if __name__ == "__main__":
                                  "--duration-log.statistics", "true",
                                  "--output-prefix", 'outputs/logs/' + options.dbName
                                  ])
-        init()
+        init(options)
         print("Average QL for Q-learning with state=queue and actSel=e-greedy VARIABLE: ", run(options))
 
     if (options.start <= 10 and options.end >= 10):
@@ -279,7 +280,7 @@ if __name__ == "__main__":
                                  "--duration-log.statistics", "true",
                                  "--output-prefix", 'outputs/logs/' + options.dbName
                                  ])
-        init()
+        init(options)
         print("Average QL for Q-learning with state=queue and actSel=softmax VARIABLE: ", run(options))
 
     if (options.start <= 11 and options.end >= 11):
@@ -298,7 +299,7 @@ if __name__ == "__main__":
                                  "--duration-log.statistics", "true",
                                  "--output-prefix", 'outputs/logs/' + options.dbName
                                  ])
-        init()
+        init(options)
         print("Average QL for SARSA with state=queue and actSel=e-greedy VARIABLE: ", run(options))
 
     if (options.start <= 12 and options.end >= 12):
@@ -317,7 +318,7 @@ if __name__ == "__main__":
                                  "--duration-log.statistics", "true",
                                  "--output-prefix", 'outputs/logs/' + options.dbName
                                  ])
-        init()
+        init(options)
         print("Average QL for SARSA with state=queue and actSel=softmax VARIABLE: ", run(options))
 
     if (options.start <= 13 and options.end >= 13):
@@ -336,7 +337,7 @@ if __name__ == "__main__":
                                  "--duration-log.statistics", "true",
                                  "--output-prefix", 'outputs/logs/' + options.dbName
                                  ])
-        init()
+        init(options)
         print("Average QL for Q-learning with state=delay and actSel=e-greedy VARIABLE: ", run(options))
 
     if (options.start <= 14 and options.end >= 14):
@@ -355,7 +356,7 @@ if __name__ == "__main__":
                                  "--duration-log.statistics", "true",
                                  "--output-prefix", 'outputs/logs/' + options.dbName
                                  ])
-        init()
+        init(options)
         print("Average QL for Q-learning with state=delay and actSel=softmax VARIABLE: ", run(options))
 
     if (options.start <= 15 and options.end >= 15):
@@ -374,7 +375,7 @@ if __name__ == "__main__":
                                  "--duration-log.statistics", "true",
                                  "--output-prefix", 'outputs/logs/' + options.dbName
                                  ])
-        init()
+        init(options)
         print("Average QL for SARSA with state=delay and actSel=e-greedy VARIABLE: ", run(options))
 
     if (options.start <= 16 and options.end >= 16):
@@ -393,5 +394,5 @@ if __name__ == "__main__":
                                  "--duration-log.statistics", "true",
                                  "--output-prefix", 'outputs/logs/' + options.dbName
                                  ])
-        init()
+        init(options)
         print("Average QL for SARSA with state=delay and actSel=softmax VARIABLE: ", run(options))
