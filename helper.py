@@ -123,7 +123,7 @@ if __name__ != "__main__":
     fig = plt.figure()
     ax = fig.add_subplot(111)
 
-    ax.set_xlabel('Time Step (x100)')
+    ax.set_xlabel('Time Step (x300)')
     ax.set_ylabel('Average Queue Length')
 
     hl, = ax.plot([], [])

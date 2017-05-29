@@ -25,9 +25,9 @@ def get_options():
     optParser = optparse.OptionParser()
     optParser.add_option("--nogui", action="store_true",
                          default=False, help="run the commandline version of sumo")
-    optParser.add_option("--cars", "-C", dest="numberCars", default=20000, metavar="NUM",
+    optParser.add_option("--cars", "-C", dest="numberCars", default=200000, metavar="NUM",
                          help="specify the number of cars generated for simulation")
-    optParser.add_option("--bracket", dest="bracket", default=10, metavar="BRACKET",
+    optParser.add_option("--bracket", dest="bracket", default=4, metavar="BRACKET",
                          help="specify the number with which to partition the range of queue length/cumulative delay")
     optParser.add_option("--start", dest="start", default=0, metavar="NUM",
                          help="specify the start index of the combinations to run")
@@ -63,6 +63,12 @@ if __name__ == "__main__":
     random.seed(options.seed)
     updateVehDistribution()
 
+    edgeWidth=5
+    lateral_resolution_width=2.5
+    lateral_resolution_width=float(edgeWidth/5)
+    lateral_resolution_width=str(lateral_resolution_width)
+
+
     options.start = int(options.start)
     options.end = int(options.end)
 
@@ -80,6 +86,7 @@ if __name__ == "__main__":
                                  "-r", "data/cross.rou.xml",
                                  "--queue-output", "queue.xml",
                                  "--tripinfo-output", "tripinfo.xml",
+                                 "--lateral-resolution",lateral_resolution_width,
                                  "--duration-log.statistics", "true",
                                  "--output-prefix", 'outputs/logs/' + options.dbName
                                  ])
@@ -101,6 +108,7 @@ if __name__ == "__main__":
                                  "-a", "data/cross.add.xml",
                                  "-r", "data/cross.rou.xml",
                                  "--queue-output", "queue.xml",
+                                 "--lateral-resolution",lateral_resolution_width,
                                  "--tripinfo-output", "tripinfo.xml",
                                  "--duration-log.statistics", "true",
                                  "--output-prefix", 'outputs/logs/' + options.dbName
@@ -120,6 +128,7 @@ if __name__ == "__main__":
                                  "-a", "data/cross.add.xml",
                                  "-r", "data/cross.rou.xml",
                                  "--queue-output", "queue.xml",
+                                 "--lateral-resolution",lateral_resolution_width,
                                  "--tripinfo-output", "tripinfo.xml",
                                  "--duration-log.statistics", "true",
                                  "--output-prefix", 'outputs/logs/' + options.dbName
@@ -139,6 +148,7 @@ if __name__ == "__main__":
                                  "-a", "data/cross.add.xml",
                                  "-r", "data/cross.rou.xml",
                                  "--queue-output", "queue.xml",
+                                 "--lateral-resolution",lateral_resolution_width,
                                  "--tripinfo-output", "tripinfo.xml",
                                  "--duration-log.statistics", "true",
                                  "--output-prefix", 'outputs/logs/' + options.dbName
@@ -157,6 +167,7 @@ if __name__ == "__main__":
                                  "-n", "data/cross.net.xml",
                                  "-a", "data/cross.add.xml",
                                  "-r", "data/cross.rou.xml",
+                                 "--lateral-resolution",lateral_resolution_width,
                                  "--queue-output", "queue.xml",
                                  "--tripinfo-output", "tripinfo.xml",
                                  "--duration-log.statistics", "true",
@@ -176,6 +187,7 @@ if __name__ == "__main__":
                                  "-n", "data/cross.net.xml",
                                  "-a", "data/cross.add.xml",
                                  "-r", "data/cross.rou.xml",
+                                 "--lateral-resolution",lateral_resolution_width,
                                  "--queue-output", "queue.xml",
                                  "--tripinfo-output", "tripinfo.xml",
                                  "--duration-log.statistics", "true",
@@ -195,6 +207,7 @@ if __name__ == "__main__":
                                  "-n", "data/cross.net.xml",
                                  "-a", "data/cross.add.xml",
                                  "-r", "data/cross.rou.xml",
+                                 "--lateral-resolution",lateral_resolution_width,
                                  "--queue-output", "queue.xml",
                                  "--tripinfo-output", "tripinfo.xml",
                                  "--duration-log.statistics", "true",
@@ -214,6 +227,7 @@ if __name__ == "__main__":
                                  "-n", "data/cross.net.xml",
                                  "-a", "data/cross.add.xml",
                                  "-r", "data/cross.rou.xml",
+                                 "--lateral-resolution",lateral_resolution_width,
                                  "--queue-output", "queue.xml",
                                  "--tripinfo-output", "tripinfo.xml",
                                  "--duration-log.statistics", "true",
@@ -233,6 +247,7 @@ if __name__ == "__main__":
                                  "-n", "data/cross.net.xml",
                                  "-a", "data/cross.add.xml",
                                  "-r", "data/cross.rou.xml",
+                                 "--lateral-resolution",lateral_resolution_width,
                                  "--queue-output", "queue.xml",
                                  "--tripinfo-output", "tripinfo.xml",
                                  "--duration-log.statistics", "true",
@@ -256,6 +271,7 @@ if __name__ == "__main__":
                                  "-n", "data/cross.net.xml",
                                  "-a", "data/cross_variable.add.xml",
                                  "-r", "data/cross.rou.xml",
+                                 "--lateral-resolution",lateral_resolution_width,
                                  "--queue-output", "queue.xml",
                                  "--tripinfo-output", "tripinfo.xml",
                                  "--duration-log.statistics", "true",
@@ -276,6 +292,7 @@ if __name__ == "__main__":
                                  "-a", "data/cross_variable.add.xml",
                                  "-r", "data/cross.rou.xml",
                                  "--queue-output", "queue.xml",
+                                 "--lateral-resolution",lateral_resolution_width,
                                  "--tripinfo-output", "tripinfo.xml",
                                  "--duration-log.statistics", "true",
                                  "--output-prefix", 'outputs/logs/' + options.dbName
@@ -294,6 +311,7 @@ if __name__ == "__main__":
                                  "-n", "data/cross.net.xml",
                                  "-a", "data/cross_variable.add.xml",
                                  "-r", "data/cross.rou.xml",
+                                 "--lateral-resolution",lateral_resolution_width,
                                  "--queue-output", "queue.xml",
                                  "--tripinfo-output", "tripinfo.xml",
                                  "--duration-log.statistics", "true",
@@ -313,6 +331,7 @@ if __name__ == "__main__":
                                  "-n", "data/cross.net.xml",
                                  "-a", "data/cross_variable.add.xml",
                                  "-r", "data/cross.rou.xml",
+                                 "--lateral-resolution",lateral_resolution_width,
                                  "--queue-output", "queue.xml",
                                  "--tripinfo-output", "tripinfo.xml",
                                  "--duration-log.statistics", "true",
@@ -332,6 +351,7 @@ if __name__ == "__main__":
                                  "-n", "data/cross.net.xml",
                                  "-a", "data/cross_variable.add.xml",
                                  "-r", "data/cross.rou.xml",
+                                 "--lateral-resolution",lateral_resolution_width,
                                  "--queue-output", "queue.xml",
                                  "--tripinfo-output", "tripinfo.xml",
                                  "--duration-log.statistics", "true",
@@ -351,6 +371,7 @@ if __name__ == "__main__":
                                  "-n", "data/cross.net.xml",
                                  "-a", "data/cross_variable.add.xml",
                                  "-r", "data/cross.rou.xml",
+                                 "--lateral-resolution",lateral_resolution_width,
                                  "--queue-output", "queue.xml",
                                  "--tripinfo-output", "tripinfo.xml",
                                  "--duration-log.statistics", "true",
@@ -370,6 +391,7 @@ if __name__ == "__main__":
                                  "-n", "data/cross.net.xml",
                                  "-a", "data/cross_variable.add.xml",
                                  "-r", "data/cross.rou.xml",
+                                 "--lateral-resolution",lateral_resolution_width,
                                  "--queue-output", "queue.xml",
                                  "--tripinfo-output", "tripinfo.xml",
                                  "--duration-log.statistics", "true",
@@ -389,6 +411,7 @@ if __name__ == "__main__":
                                  "-n", "data/cross.net.xml",
                                  "-a", "data/cross_variable.add.xml",
                                  "-r", "data/cross.rou.xml",
+                                 "--lateral-resolution",lateral_resolution_width,
                                  "--queue-output", "queue.xml",
                                  "--tripinfo-output", "tripinfo.xml",
                                  "--duration-log.statistics", "true",
