@@ -98,8 +98,13 @@ def run(options):
             # get average queue length till now
             avgQL[i] = (avgQL[i]*step + avgQLCurr[i])/((step+1)*1.0)
 
-            if(i == 0):
-                plotGraph(step, avgQL[i])
+            # call plot graph with avg ql
+            if(i == trafficLightsNumber-1):
+                avgQLTotal = 0
+                for avgQLC in avgQLCurr:
+                    avgQLTotal += avgQLC
+                avgQLTotal = avgQLTotal/(trafficLightsNumber*1.0)
+                plotGraph(step, avgQLTotal)
 
             options.bracket = int(options.bracket)
             currPhase[i] = traci.trafficlights.getPhase(ID)

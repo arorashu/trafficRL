@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pymongo import MongoClient
 from dbFunction import getRunCount
+from scipy.interpolate import spline
 
 client = MongoClient()
 db = client['tl']
@@ -89,6 +90,27 @@ def plotGraph(xVar, yVar):
     return
 
 def savePlot(dbName):
+    ax.set_title(dbName)
+    # x_sm = hl.get_xdata()
+    # y_sm = hl.get_ydata()
+    #
+    # x_smooth = np.linspace(x_sm.min(), x_sm.max(), 200)
+    # y_smooth = spline(x_sm, y_sm, x_smooth)
+    #
+    # ax.plot(x_smooth, y_smooth, 'red', linewidth=1)
+    #
+    # # Colorcode the tick tabs
+    # ax.tick_params(axis='x', colors='red')
+    # ax.tick_params(axis='y', colors='red')
+    #
+    # # Colorcode the spine of the graph
+    # ax.spines['bottom'].set_color('r')
+    # ax.spines['top'].set_color('r')
+    # ax.spines['left'].set_color('r')
+    # ax.spines['right'].set_color('r')
+
+    plt.tight_layout()
+    plt.grid(alpha=0.8)
     plt.savefig('outputs/ql' + dbName + '.png')
     plt.savefig('outputs/ql' + dbName + '.pdf')
 
@@ -101,7 +123,6 @@ if __name__ != "__main__":
 
     ax.set_xlabel('Time Step')
     ax.set_ylabel('Average Queue Length')
-    ax.set_title('Title')
 
     hl, = ax.plot([], [])
 
