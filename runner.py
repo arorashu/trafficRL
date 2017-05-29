@@ -271,7 +271,7 @@ if __name__ == "__main__":
 
     edgeWidth=5
     lateral_resolution_width=2.5    
-    if(int(options.sublaneNumber) <= 6.0)
+    if(int(options.sublaneNumber) <= 6.0):
         lateral_resolution_width=float(edgeWidth/int(options.sublaneNumber))
     
     lateral_resolution_width=str(lateral_resolution_width)
