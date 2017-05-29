@@ -218,9 +218,12 @@ def get_options():
                          help="specify phasing scheme (1 = Fixed Phasing, 2 = Variable Phasing)")
     optParser.add_option("--action", dest="actionSel", default='1', metavar="NUM", choices= ['1', '2'],
                          help="specify action selection method (1 = epsilon greedy, 2 = softmax)")
+    optParser.add_option("--sublane", dest="sublaneNumber", default=2, metavar="FLOAT",
+                         help="specify number of sublanes per edge (max=6) ")
     options, args = optParser.parse_args()
     return options
 
+fringeFactor=10
 # this uses randomtrips.py to generate a routefile with random traffic
 def generate_routefile(options):
     #generating route file using randomTrips.py
@@ -234,6 +237,7 @@ def generate_routefile(options):
         + " --weights-prefix " + os.path.join(fileDir, 'data/cross')
         + " -e " + str(options.numberCars)
         + " -p  4" + " -r " + os.path.join(fileDir, 'data/cross.rou.xml')
+        + " --fringe-factor " + str(fringeFactor) 
         + " --trip-attributes=\"type=\"" + vType + "\"\""
         + " --additional-file "  +  os.path.join(fileDir, 'data/type.add.xml')
         + " --edge-permission emergency passenger taxi bus truck motorcycle bicycle"
@@ -258,11 +262,19 @@ if __name__ == "__main__":
     if (options.learn == '0'):
         addFile = "data/cross_no_learn.add.xml"
 
+    edgeWidth=5
+    lateral_resolution_width=2.5    
+    if(int(options.sublaneNumber) <= 6.0)
+        lateral_resolution_width=float(edgeWidth/int(options.sublaneNumber))
+    
+    lateral_resolution_width=str(lateral_resolution_width)
+
     # Sumo is started as a subprocess and then the python script connects and runs
     traci.start([sumoBinary, "-c", "data/cross.sumocfg",
                              "-n", "data/cross.net.xml",
                              "-a", addFile,
                              "-r", "data/cross.rou.xml",
+                             "--lateral-resolution",lateral_resolution_width,
                              "--queue-output", "queue.xml",
                              "--tripinfo-output", "tripinfo.xml"])
     init()
