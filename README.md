@@ -1,47 +1,55 @@
-# trafficRL
+# Traffic Reinforcement Learning (RL)
 
-## Installation instructions to follow
+## Run
 
-### 1. Install SUMO:
+### Setup
 
-  http://sumo.dlr.de/wiki/Downloads
+1. Install SUMO: <http://sumo.dlr.de/wiki/Downloads>
 
-### 2. Install MongoDB
+1. Install MongoDB: Follow the official instructions at:
 
-Installation :
-Follow the official instructions at:
-  https://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/ (for ubuntu)
-  https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/ (for windows)
+    <https://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/> (for ubuntu)
+    <https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/> (for windows)
 
-Check mongo is installed by starting the server from the command line:
+    Check mongo is installed by starting the server from the command line:
 
-For Ubuntu:
-    mongod
+    For Ubuntu:
+        `mongod`
 
-For Windows:
-    "C:\Program Files\MongoDB\Server\3.4\bin\mongod.exe"
+    For Windows:
+        `C:\Program Files\MongoDB\Server\3.4\bin\mongod.exe`
 
-### 3. Install PyMongo and NumPy using pip
+1. Clone the project using git and cd into it:
 
-    python -m pip install --user pymongo
+        ```sh
+        git clone https://github.com/codemerlin19/trafficRL.git
 
-    python -m pip install --user numpy
+        cd trafficRL
+        ```
 
+1. (Optionally) Install Virtual Env
 
-### 4. Clone repository
+        ```sh
+        pip3 install virtualenv
+        virtualenv .venv
+        source .venv/bin/activate
+        ```
 
-Clone the project using git and cd into it:
+1. Install requirements
 
-    git clone https://github.com/codemerlin19/trafficRL.git
+        ```sh
+        pip3 install -r requirements.txt
+        ```
 
-    cd trafficRL
+1. Run project
 
-### 5. Run project
+        ```sh
+        python runner.py
+        ```
 
-    python runner.py
+### Usage: runner.py [options]
 
-##### Usage: runner.py [options]:
-
+    ```sh
       -h, --help          show this help message and exit
       --nogui             run the commandline version of sumo
       -C NUM, --cars=NUM  specify the number of cars generated for simulation
@@ -54,5 +62,6 @@ Clone the project using git and cd into it:
                           Phasing)
       --action=NUM        specify action selection method (1 = epsilon greedy, 2 =
                           softmax)
+    ```
 
 ##### NOTE: Ensure that SUMO_HOME path is defined in environment variables
