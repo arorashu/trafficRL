@@ -74,6 +74,10 @@ Last tested with Eclipse SUMO Version 1.6.0.
 
 - [Traci](https://sumo.dlr.de/docs/TraCI.html)
 
+### Mongo
+
+Currently it expects mongo on localhost on the default port without any authentication.
+
 ## Development
 
 ### Linting
