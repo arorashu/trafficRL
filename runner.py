@@ -37,12 +37,12 @@ def run(options):
     temp = []
 
     # get list of traffic lights
-    trafficLights = traci.trafficlights.getIDList()
-    trafficLightsNumber = traci.trafficlights.getIDCount()
+    trafficLights = traci.trafficlight.getIDList()
+    trafficLightsNumber = traci.trafficlight.getIDCount()
 
     # we set every light to phase 0
     for ID in trafficLights:
-        traci.trafficlights.setPhase(ID, 0)
+        traci.trafficlight.setPhase(ID, 0)
         initTrafficLight(ID)
         tempStats.append(temp)
 
@@ -77,7 +77,7 @@ def run(options):
         for ID in trafficLights:
 
             # get lanes for each traffic light
-            lanes = traci.trafficlights.getControlledLanes(ID)
+            lanes = traci.trafficlight.getControlledLanes(ID)
             lanesUniq = []
             # get unique lanes
             j = 0
@@ -115,7 +115,7 @@ def run(options):
 
             # run only for every db_step and when phase is not yellow
             # yellow compulsory
-            currPhase[i] = traci.trafficlights.getPhase(ID)
+            currPhase[i] = traci.trafficlight.getPhase(ID)
             condition = True
             if (options.phasing == '1'):
                 condition = currPhase[i]!=2 and currPhase[i]!=4 and currPhase[i]!=7 and currPhase[i]!=9
@@ -192,16 +192,16 @@ def run(options):
                 prePhase[i] = phaseVector[:]
 
                 if(options.phasing=='1'):
-                    traci.trafficlights.setPhase(ID, nextAction)
+                    traci.trafficlight.setPhase(ID, nextAction)
                     if(nextAction!=currPhase[i]):
                         nextAction=1
                     else:
                         nextAction=0
                 else:
                     if(nextAction != currPhase[i]):
-                        oldRGYState = traci.trafficlights.getRedYellowGreenState(ID)
-                        traci.trafficlights.setPhase(ID, nextAction)
-                        newRGYState = traci.trafficlights.getRedYellowGreenState(ID)
+                        oldRGYState = traci.trafficlight.getRedYellowGreenState(ID)
+                        traci.trafficlight.setPhase(ID, nextAction)
+                        newRGYState = traci.trafficlight.getRedYellowGreenState(ID)
                         # print(oldRGYState, newRGYState, "old new")
 
                         midRGYState = ""
@@ -214,15 +214,15 @@ def run(options):
                                 midRGYState += c
                         # print(midRGYState, "mid")
 
-                        traci.trafficlights.setRedYellowGreenState(ID, midRGYState)
+                        traci.trafficlight.setRedYellowGreenState(ID, midRGYState)
                         tempCounter = 5
                         while(tempCounter > 0):
                             traci.simulationStep()
                             tempCounter -=1
-                        traci.trafficlights.setProgram(ID, 'custom2')
-                        traci.trafficlights.setPhase(ID, nextAction)
+                        traci.trafficlight.setProgram(ID, 'custom2')
+                        traci.trafficlight.setPhase(ID, nextAction)
                     else:
-                        traci.trafficlights.setPhase(ID, nextAction)
+                        traci.trafficlight.setPhase(ID, nextAction)
 
                 preAction[i] = nextAction
 
