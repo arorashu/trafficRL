@@ -63,7 +63,7 @@ def run(options):
     i = 0
     for ID in trafficLights:
         qValues = db['qValues' + ID]
-        if (qValues.find({"ageExists": True}).count() != 0):
+        if (qValues.count_documents({"ageExists": True}) != 0):
             ages[i] = qValues.find_one({"ageExists": True})['age']
         i+=1
 
@@ -260,7 +260,7 @@ def get_options():
     optParser = optparse.OptionParser()
     optParser.add_option("--nogui", action="store_true",
                          default=False, help="run the commandline version of sumo")
-    optParser.add_option("--cars", "-C", dest="numberCars", default=100000, metavar="NUM",
+    optParser.add_option("--cars", "-C", dest="numberCars", default=1000, metavar="NUM",
                          help="specify the number of cars generated for simulation")
     optParser.add_option("--bracket", dest="bracket", default=4, metavar="BRACKET",
                          help="specify the number with which to partition the range of queue length/cumulative delay")
