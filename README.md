@@ -1,4 +1,6 @@
-# Traffic Reinforcement Learning (RL)
+# trafficRL
+
+Adaptive Traffic Control System Using Reinforcment Learning
 
 ## Run
 
