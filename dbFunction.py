@@ -15,29 +15,31 @@ client = MongoClient()
 
 # For fixed phasing
 
+
 def initTrafficLight(ID):
-    pre = 6*[0]
+    pre = 6 * [0]
     qValues = db['qValues' + ID]
     if (qValues.find({"state": pre}).count() != 0):
         return
     temp = []
     for i in range(0, globals.numActions):
-        temp.append({"state":   pre,
-                    "action":   i,
-                    "qVal":     0,
-                    "visits":   1})
+        temp.append({"state": pre,
+                     "action": i,
+                     "qVal": 0,
+                     "visits": 1})
     qValues.insert_many(temp)
 
 
 def initRunCount(options):
-    #noOfRuns to store run statistics
+    # noOfRuns to store run statistics
     global db
     db = client[options.dbName]
     nor = db['noOfRuns']
-    if ( nor.count() == 0 ):
-        nor.insert_one({"count" : 0});
+    if (nor.count() == 0):
+        nor.insert_one({"count": 0})
     else:
-        nor.update_one({}, {'$inc':{'count':1}})
+        nor.update_one({}, {'$inc': {'count': 1}})
+
 
 def getRunCount():
     nor = db['noOfRuns']
@@ -45,7 +47,7 @@ def getRunCount():
     return run_count
 
 
-def saveStats( traffic_light_count, temp_stats ):
+def saveStats(traffic_light_count, temp_stats):
     run_id = getRunCount()
     stats = []
     temp = []
@@ -55,6 +57,7 @@ def saveStats( traffic_light_count, temp_stats ):
         run_stats = []
         run_stats.append({"run_id": run_id, "data": temp_stats[id]})
         stats[id].insert_many(run_stats)
+
 
 def dbFunction(curr, pre, preAction, age, currPhase, ID, options):
     reward = 0
@@ -66,10 +69,10 @@ def dbFunction(curr, pre, preAction, age, currPhase, ID, options):
     temp = []
     if (currBSON.count() == 0):
         for i in range(0, globals.numActions):
-            temp.append({"state":   curr,
-                        "action":   i,
-                        "qVal":     0,
-                        "visits":   1})
+            temp.append({"state": curr,
+                         "action": i,
+                         "qVal": 0,
+                         "visits": 1})
         qValues.insert_many(temp)
         currBSON = temp
     # TO-DO: visits to be updated
@@ -79,7 +82,7 @@ def dbFunction(curr, pre, preAction, age, currPhase, ID, options):
     else:
         reward = delayReward(pre, curr, globals.N)
 
-    currQ = qValues.find_one({"state":  pre, "action":   preAction})['qVal']
+    currQ = qValues.find_one({"state": pre, "action": preAction})['qVal']
 
     # converts currBSON from cursor to list
     tempBSON = []
@@ -95,13 +98,16 @@ def dbFunction(curr, pre, preAction, age, currPhase, ID, options):
         newQ = qLearning(currQ, globals.alpha, globals.gamma, reward, nextMaxQ)
     else:
         nextQ = 0
-        if (options.actionSel=='1'):
-            nextQ = currBSON[eGreedy(globals.numActions, globals.E, age, currBSON)]['qVal']
+        if (options.actionSel == '1'):
+            nextQ = currBSON[eGreedy(
+                globals.numActions, globals.E, age, currBSON)]['qVal']
         else:
-            nextQ = currBSON[softmax(globals.numActions, options.numberCars, age, currBSON)]['qVal']
+            nextQ = currBSON[softmax(
+                globals.numActions, options.numberCars, age, currBSON)]['qVal']
         newQ = sarsa(currQ, globals.alpha, globals.gamma, reward, nextQ)
 
-    qValues.find_one_and_update({"state": pre, "action": preAction}, {'$set': {"qVal": newQ}})
+    qValues.find_one_and_update({"state": pre, "action": preAction}, {
+                                '$set': {"qVal": newQ}})
 
     currBSON = qValues.find({"state": curr}).sort("action", ASCENDING)
 
@@ -114,12 +120,13 @@ def dbFunction(curr, pre, preAction, age, currPhase, ID, options):
     # nextAction = 0 or 1 (0 = continue same phase, 1 = go to next phase)
     # i.e. index of next phase = (currPhaseIndex + action) % N
 
-    if (options.actionSel=='1'):
+    if (options.actionSel == '1'):
         nextAction = eGreedy(globals.numActions, globals.E, age, currBSON)
     else:
-        nextAction = softmax(globals.numActions, options.numberCars, age, currBSON)
+        nextAction = softmax(globals.numActions,
+                             options.numberCars, age, currBSON)
 
-    if (options.phasing=='1'):
-        nextAction = (nextAction + currPhase)%10
+    if (options.phasing == '1'):
+        nextAction = (nextAction + currPhase) % 10
 
     return nextAction

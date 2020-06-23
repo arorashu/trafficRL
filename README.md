@@ -73,3 +73,14 @@
 Last tested with Eclipse SUMO Version 1.6.0.
 
 - [Traci](https://sumo.dlr.de/docs/TraCI.html)
+
+## Development
+
+### Linting
+
+For auto fixes use `autopep8`:
+
+        ```sh
+        python -m pip install autopep8
+        autopep8 --in-place --aggressive  --exclude "__pycache__,.venv"  ./*.py
+        ```
