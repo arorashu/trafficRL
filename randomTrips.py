@@ -334,7 +334,7 @@ def main(options):
         fouttrips.write("</trips>\n")
 
     if options.routefile:
-        args = [DUAROUTER, '-n', options.netfile, '-t', options.tripfile, '-o', options.routefile, '--ignore-errors',
+        args = [DUAROUTER, '-n', options.netfile, '--route-files', options.tripfile, '-o', options.routefile, '--ignore-errors',
                 '--begin', str(options.begin), '--end', str(options.end), '--no-step-log', '--no-warnings']
         if options.additional is not None:
             args += ['--additional-files', options.additional]
