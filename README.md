@@ -65,3 +65,11 @@
     ```
 
 ##### NOTE: Ensure that SUMO_HOME path is defined in environment variables
+
+## Uses
+
+### [SUMO](https://github.com/eclipse/sumo)
+
+Last tested with Eclipse SUMO Version 1.6.0.
+
+- [Traci](https://sumo.dlr.de/docs/TraCI.html)
