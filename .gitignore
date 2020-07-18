@@ -10,3 +10,6 @@ trips.trips.xml
 cross.rou.xml
 cross.rou.alt.xml
 *.pyc
+
+__pycache__
+.venv

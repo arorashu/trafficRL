@@ -34,8 +34,8 @@ import optparse
 SUMO_HOME = os.environ.get('SUMO_HOME',
                            os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
 sys.path.append(os.path.join(SUMO_HOME, 'tools'))
-import sumolib
-import route2trips
+import route2trips  # nopep8
+import sumolib  # nopep8
 
 DUAROUTER = sumolib.checkBinary('duarouter')
 
@@ -158,7 +158,8 @@ class RandomEdgeGenerator:
 
 class RandomTripGenerator:
 
-    def __init__(self, source_generator, sink_generator, via_generator, intermediate, pedestrians):
+    def __init__(self, source_generator, sink_generator,
+                 via_generator, intermediate, pedestrians):
         self.source_generator = source_generator
         self.sink_generator = sink_generator
         self.via_generator = via_generator
@@ -181,7 +182,8 @@ class RandomTripGenerator:
                       + [destCoord])
             distance = sum([euclidean(p, q)
                             for p, q in zip(coords[:-1], coords[1:])])
-            if distance >= min_distance and (max_distance is None or distance < max_distance):
+            if distance >= min_distance and (
+                    max_distance is None or distance < max_distance):
                 return source_edge, sink_edge, intermediate
         raise Exception("no trip found after %s tries" % maxtries)
 
@@ -193,7 +195,8 @@ def get_prob_fun(options, fringe_bonus, fringe_forbidden):
             return 0  # not allowed
         if fringe_bonus is None and edge.is_fringe() and not options.pedestrians:
             return 0  # not suitable as intermediate way point
-        if fringe_forbidden is not None and edge.is_fringe(getattr(edge, fringe_forbidden)) and not options.pedestrians:
+        if fringe_forbidden is not None and edge.is_fringe(
+                getattr(edge, fringe_forbidden)) and not options.pedestrians:
             return 0  # the wrong kind of fringe
         prob = 1
         if options.length:
@@ -243,7 +246,8 @@ def buildTripGenerator(net, options):
     try:
         via_generator = RandomEdgeGenerator(
             net, get_prob_fun(options, None, None))
-        if options.weightsprefix and os.path.isfile(options.weightsprefix + VIA_SUFFIX):
+        if options.weightsprefix and os.path.isfile(
+                options.weightsprefix + VIA_SUFFIX):
             via_generator = RandomEdgeGenerator(
                 net, LoadedProps(options.weightsprefix + VIA_SUFFIX))
     except InvalidGenerator:
@@ -254,7 +258,8 @@ def buildTripGenerator(net, options):
         else:
             via_generator = None
 
-    return RandomTripGenerator(source_generator, sink_generator, via_generator, options.intermediate, options.pedestrians)
+    return RandomTripGenerator(source_generator, sink_generator,
+                               via_generator, options.intermediate, options.pedestrians)
 
 
 def is_walk_attribute(attr):
@@ -334,7 +339,7 @@ def main(options):
         fouttrips.write("</trips>\n")
 
     if options.routefile:
-        args = [DUAROUTER, '-n', options.netfile, '-t', options.tripfile, '-o', options.routefile, '--ignore-errors',
+        args = [DUAROUTER, '-n', options.netfile, '--route-files', options.tripfile, '-o', options.routefile, '--ignore-errors',
                 '--begin', str(options.begin), '--end', str(options.end), '--no-step-log', '--no-warnings']
         if options.additional is not None:
             args += ['--additional-files', options.additional]
@@ -355,6 +360,7 @@ def main(options):
 
     # return wether trips could be genreated as requested
     return trip_generator is not None
+
 
 if __name__ == "__main__":
     if not main(get_options()):

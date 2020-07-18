@@ -5,10 +5,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pymongo import MongoClient
 from dbFunction import getRunCount
-from scipy.interpolate import spline
 
 client = MongoClient()
 db = client['tl']
+
 
 def getDBName(options):
     name = 'tl'
@@ -36,6 +36,7 @@ def getDBName(options):
 
     return name
 
+
 def updateVehDistribution():
     fileDir = os.path.dirname(os.path.realpath('__file__'))
     src = et.parse(os.path.join(fileDir, 'data/cross.src.xml'))
@@ -47,25 +48,27 @@ def updateVehDistribution():
     # generate uniformly dstributed random numbers that sum to 1
     listRandSrc = [0, 1]
     listRandDst = [0, 1]
-    for i in range(len(srcEdges)-1):
+    for i in range(len(srcEdges) - 1):
         listRandSrc.append(round(random.uniform(0, 1), 4))
         listRandDst.append(round(random.uniform(0, 1), 4))
     listRandSrc.sort()
     listRandDst.sort()
 
     for i, edge in enumerate(srcEdges):
-        edge.set('value', str(listRandSrc[i+1] - listRandSrc[i]))
+        edge.set('value', str(listRandSrc[i + 1] - listRandSrc[i]))
 
     for i, edge in enumerate(dstEdges):
-        edge.set('value', str(listRandDst[i+1] - listRandDst[i]))
+        edge.set('value', str(listRandDst[i + 1] - listRandDst[i]))
 
     src.write(os.path.join(fileDir, 'data/cross.src.xml'))
     dst.write(os.path.join(fileDir, 'data/cross.dst.xml'))
 
 # fringeFactor=10
 # this uses randomtrips.py to generate a routefile with random traffic
+
+
 def generate_routefile(options):
-    #generating route file using randomTrips.py
+    # generating route file using randomTrips.py
     if (os.name == "posix"):
         vType = '\"\'typedist1\'\"'
     else:
@@ -73,14 +76,16 @@ def generate_routefile(options):
     fileDir = os.path.dirname(os.path.realpath('__file__'))
     filename = os.path.join(fileDir, 'data/cross.net.xml')
     os.system("python randomTrips.py -n " + filename
-        + " --weights-prefix " + os.path.join(fileDir, 'data/cross')
-        + " -e " + str(options.numberCars)
-        + " -p  4" + " -r " + os.path.join(fileDir, 'data/cross.rou.xml')
-        # + " --fringe-factor " + str(fringeFactor)
-        + " --trip-attributes=\"type=\"" + vType + "\"\""
-        + " --additional-file "  +  os.path.join(fileDir, 'data/type.add.xml')
-        + " --edge-permission emergency passenger taxi bus truck motorcycle bicycle"
-        )
+              + " --weights-prefix " + os.path.join(fileDir, 'data/cross')
+              + " -e " + str(options.numberCars)
+              + " -p  4" + " -r " + os.path.join(fileDir, 'data/cross.rou.xml')
+              # + " --fringe-factor " + str(fringeFactor)
+              + " --trip-attributes=\"type=\"" + vType + "\"\""
+              + " --additional-file " + \
+              os.path.join(fileDir, 'data/type.add.xml')
+              + " --edge-permission emergency passenger taxi bus truck motorcycle bicycle"
+              )
+
 
 def plotGraph(xVar, yVar):
     hl.set_xdata(np.append(hl.get_xdata(), xVar))
@@ -91,25 +96,9 @@ def plotGraph(xVar, yVar):
     # plt.pause(0.0001)
     return
 
+
 def savePlot(dbName):
     ax.set_title(dbName)
-    # x_sm = hl.get_xdata()
-    # y_sm = hl.get_ydata()
-    #
-    # x_smooth = np.linspace(x_sm.min(), x_sm.max(), 200)
-    # y_smooth = spline(x_sm, y_sm, x_smooth)
-    #
-    # ax.plot(x_smooth, y_smooth, 'red', linewidth=1)
-    #
-    # # Colorcode the tick tabs
-    # ax.tick_params(axis='x', colors='red')
-    # ax.tick_params(axis='y', colors='red')
-    #
-    # # Colorcode the spine of the graph
-    # ax.spines['bottom'].set_color('r')
-    # ax.spines['top'].set_color('r')
-    # ax.spines['left'].set_color('r')
-    # ax.spines['right'].set_color('r')
 
     plt.tight_layout()
     plt.grid(alpha=0.8)
