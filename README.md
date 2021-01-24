@@ -33,6 +33,10 @@ This project aims to compare different RL methods for a Traffic Control System:
     <https://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/> (for ubuntu)
     <https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/> (for windows)
 
+1. Install some required pip modules and update pip:
+
+        python -m pip install --upgrade pip setuptools wheel
+
 1. Clone the project using git and cd into it:
 
         git clone https://github.com/arorashu/trafficRL
