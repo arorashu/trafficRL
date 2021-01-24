@@ -10,7 +10,7 @@ client = MongoClient()
 
 
 def getDBName(options):
-    name = options.dbName
+    name = options.dbNamePrefix
     if (options.learn == '0'):
         return name + '_preTimed'
     elif (options.learn == '1'):

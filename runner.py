@@ -294,7 +294,7 @@ def get_options():
                          help="specify number of sublanes per edge (max=6) ")
     optParser.add_option("--dbstep", dest="sbStep", default=10, metavar="NUM",
                          help="specify dbStep, default is 10 ")
-    optParser.add_option("--dbName", dest="dbName", default='trafficRL', metavar="STRING",
+    optParser.add_option("--dbName", dest="dbNamePrefix", default='trafficRL', metavar="STRING",
                          help="specify dbName prefix")
 
     options, args = optParser.parse_args()
