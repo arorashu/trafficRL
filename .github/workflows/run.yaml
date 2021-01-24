@@ -1,0 +1,32 @@
+name: Run
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: Start MongoDB
+        uses: supercharge/mongodb-github-action@1.3.0
+        with:
+          mongodb-version: 4.2
+
+      - name: Install Sumo
+        run: |
+          sudo add-apt-repository ppa:sumo/stable
+          sudo apt-get update
+          sudo apt-get install sumo sumo-tools sumo-doc
+
+      - name: Install Requirements
+        run: pip3 install -r requirements.txt
+
+      - name: Run Automate
+        run: python automate.py  -C 200 --nogui
+        env:
+          SUMO_HOME: /usr/share/sumo
