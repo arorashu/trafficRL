@@ -10,6 +10,8 @@ from runner import run_sim, get_options
 
 def get_automate_options():
     optParser = optparse.OptionParser()
+    optParser.add_option("--nogui", action="store_true",
+                         default=True, help="run the commandline version of sumo")
     optParser.add_option("--cars", "-C", dest="numberCars", default=200000, metavar="NUM",
                          help="specify the number of cars generated for simulation")
     optParser.add_option("--seed", dest="seed", default=42, metavar="BRACKET",
@@ -27,6 +29,7 @@ if __name__ == "__main__":
     automate_options = get_automate_options()
     options = get_options()
     options.numberCars = automate_options.numberCars
+    options.nogui = automate_options.nogui
 
     # give random a seed so that results are repeatable and same vehicle
     # distribution is generated for same seed
