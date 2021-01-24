@@ -45,6 +45,8 @@ Adaptive Traffic Control System Using Reinforcment Learning
 
 ![Simulation running in Sumo](./docs/simulation.png)
 
+When running in GUI mode you will have to start the simulation manually and close Sumo only then will you get the results.
+
 > NOTE: Ensure that SUMO_HOME path is defined in environment variables
 
 ### Usage: runner.py [options]
@@ -64,7 +66,7 @@ Adaptive Traffic Control System Using Reinforcment Learning
 
 ### Automatically run all modes
 
-        python automate.py  -C 1000
+        python automate.py  -C 1000 --nogui
 
 This will run all the possible combinations for learning/state/phasing/action and print outputs. Total 17 modes (0-16). Can take a lot of time to run, depends on number of cars simulated.
 

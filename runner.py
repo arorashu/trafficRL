@@ -330,7 +330,8 @@ def run_sim(mode_num, options):
         mode_description = 'Learning=%s, with State=%s, ActionSelection=%s and %s Phasing' % (
             "Q-learning" if options.learn == '1' else "SARSA", "Queue Length" if options.stateRep == '1' else "Cumulative Delay", "e-greedy" if options.actionSel == '1' else "softmax", "Fixed" if options.phasing == '1' else "Variable")
 
-    print("Mode", mode_num, ":", mode_description)
+    print("\n****************\nMode", mode_num, ":", mode_description, "\n****************\n")
+    init(options)
     traci.start([sumoBinary, "-a", traci_add_option,
                  "-c", "data/cross.sumocfg",
                  "-n", "data/cross.net.xml",
@@ -341,8 +342,7 @@ def run_sim(mode_num, options):
                  "--duration-log.statistics", "true",
                  "--output-prefix", 'outputs/logs/' + options.dbName
                  ])
-    init(options)
-    print("Average QL for", mode_description, " =", run(options))
+    print("\n****************\nAverage QL for", mode_description, " =", run(options), "\n****************\n")
 
 
 # this is the main entry point of this script
