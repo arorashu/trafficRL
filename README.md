@@ -2,6 +2,28 @@
 
 Adaptive Traffic Control System Using Reinforcment Learning
 
+This project aims to compare different RL methods for a Traffic Control System:
+
+| Mode | Learning Type | Traffic State    | Action Selection | Phasing  |
+|------|---------------|------------------|------------------|----------|
+| 0    | No Learning   |                  |                  |          |
+| 1    | Q-Learning    | Queue Length     | Epsilon Greedy   | Fixed    |
+| 2    | Q-Learning    | Queue Length     | SoftMax          | Fixed    |
+| 3    | SARSA         | Queue Length     | Epsilon Greedy   | Fixed    |
+| 4    | SARSA         | Queue Length     | SoftMax          | Fixed    |
+| 5    | Q-Learning    | Cumulative Delay | Epsilon Greedy   | Fixed    |
+| 6    | Q-Learning    | Cumulative Delay | SoftMax          | Fixed    |
+| 7    | SARSA         | Cumulative Delay | Epsilon Greedy   | Fixed    |
+| 8    | SARSA         | Cumulative Delay | SoftMax          | Fixed    |
+| 9    | Q-Learning    | Queue Length     | Epsilon Greedy   | Variable |
+| 10   | Q-Learning    | Queue Length     | SoftMax          | Variable |
+| 11   | SARSA         | Queue Length     | Epsilon Greedy   | Variable |
+| 12   | Q-Learning    | Queue Length     | SoftMax          | Variable |
+| 13   | Q-Learning    | Cumulative Delay | Epsilon Greedy   | Variable |
+| 14   | SARSA         | Cumulative Delay | SoftMax          | Variable |
+| 15   | Q-Learning    | Cumulative Delay | Epsilon Greedy   | Variable |
+| 16   | Q-Learning    | Cumulative Delay | SoftMax          | Variable |
+
 ## Setup
 
 1. Install SUMO v1.8.0: <http://sumo.dlr.de/wiki/Downloads>
