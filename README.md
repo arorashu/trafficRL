@@ -1,28 +1,30 @@
 # TrafficRL
 
-Adaptive Traffic Control System Using Reinforcment Learning
+[![Latest Run](https://github.com/arorashu/trafficRL/workflows/Run/badge.svg)](https://github.com/arorashu/trafficRL/actions?query=workflow%3ARun)
+
+Adaptive Traffic Control System Using Reinforcment Learning.
 
 This project aims to compare different RL methods for a Traffic Control System:
 
-| Mode | Learning Type | Traffic State    | Action Selection | Phasing  |
-|------|---------------|------------------|------------------|----------|
-| 0    | No Learning   |                  |                  |          |
-| 1    | Q-Learning    | Queue Length     | Epsilon Greedy   | Fixed    |
-| 2    | Q-Learning    | Queue Length     | SoftMax          | Fixed    |
-| 3    | SARSA         | Queue Length     | Epsilon Greedy   | Fixed    |
-| 4    | SARSA         | Queue Length     | SoftMax          | Fixed    |
-| 5    | Q-Learning    | Cumulative Delay | Epsilon Greedy   | Fixed    |
-| 6    | Q-Learning    | Cumulative Delay | SoftMax          | Fixed    |
-| 7    | SARSA         | Cumulative Delay | Epsilon Greedy   | Fixed    |
-| 8    | SARSA         | Cumulative Delay | SoftMax          | Fixed    |
-| 9    | Q-Learning    | Queue Length     | Epsilon Greedy   | Variable |
-| 10   | Q-Learning    | Queue Length     | SoftMax          | Variable |
-| 11   | SARSA         | Queue Length     | Epsilon Greedy   | Variable |
-| 12   | Q-Learning    | Queue Length     | SoftMax          | Variable |
-| 13   | Q-Learning    | Cumulative Delay | Epsilon Greedy   | Variable |
-| 14   | SARSA         | Cumulative Delay | SoftMax          | Variable |
-| 15   | Q-Learning    | Cumulative Delay | Epsilon Greedy   | Variable |
-| 16   | Q-Learning    | Cumulative Delay | SoftMax          | Variable |
+| Mode | Phasing  | Traffic State    | Learning Type | Action Selection |
+|------|----------|------------------|---------------|------------------|
+| 0    | -        | -                | -             | -                |
+| 1    | Fixed    | Queue Length     | Q-Learning    | Epsilon Greedy   |
+| 2    | Fixed    | Queue Length     | Q-Learning    | SoftMax          |
+| 3    | Fixed    | Queue Length     | SARSA         | Epsilon Greedy   |
+| 4    | Fixed    | Queue Length     | SARSA         | SoftMax          |
+| 5    | Fixed    | Cumulative Delay | Q-Learning    | Epsilon Greedy   |
+| 6    | Fixed    | Cumulative Delay | Q-Learning    | SoftMax          |
+| 7    | Fixed    | Cumulative Delay | SARSA         | Epsilon Greedy   |
+| 8    | Fixed    | Cumulative Delay | SARSA         | SoftMax          |
+| 9    | Variable | Queue Length     | Q-Learning    | Epsilon Greedy   |
+| 10   | Variable | Queue Length     | Q-Learning    | SoftMax          |
+| 11   | Variable | Queue Length     | SARSA         | Epsilon Greedy   |
+| 12   | Variable | Queue Length     | Q-Learning    | SoftMax          |
+| 13   | Variable | Cumulative Delay | Q-Learning    | Epsilon Greedy   |
+| 14   | Variable | Cumulative Delay | SARSA         | SoftMax          |
+| 15   | Variable | Cumulative Delay | Q-Learning    | Epsilon Greedy   |
+| 16   | Variable | Cumulative Delay | Q-Learning    | SoftMax          |
 
 ## Setup
 
@@ -90,13 +92,23 @@ When running in GUI mode you will have to start the simulation manually and clos
         --action=NUM        specify action selection method (1 = epsilon greedy, 2 =
                                 softmax)
 
+The `outputs` folder will have plots for the average queue length.
+
 ### Automatically run all modes
 
         python automate.py  -C 1000 --nogui
 
 This will run all the possible combinations for learning/state/phasing/action and print outputs. Total 17 modes (0-16). Can take a lot of time to run, depends on number of cars simulated.
 
-## Uses
+### Results
+
+You can see the results for a demo run with **200** cars in the [latest Github Actions workflow run.](https://github.com/arorashu/trafficRL/actions?query=workflow%3ARun)
+
+Download the artifacts to view the outputs. For a more complete result you will have to run the simulation for a larger number of cars (~20000).
+
+![Github Workflow](./docs/github-workflow.png)
+
+## Tech
 
 ### [SUMO](https://github.com/eclipse/sumo)
 
@@ -109,6 +121,10 @@ Last tested with Eclipse SUMO Version 1.8.0.
 Currently it expects mongo on localhost on the default port without any authentication. Last tested with Mongo v4.2.
 
 ## Development
+
+### Map
+
+The `data` directory has a simple map with 4 traffic crossings.
 
 ### Linting
 
