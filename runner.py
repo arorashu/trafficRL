@@ -296,7 +296,12 @@ def get_options():
                          help="specify dbStep, default is 10 ")
     optParser.add_option("--dbName", dest="dbNamePrefix", default='trafficRL', metavar="STRING",
                          help="specify dbName prefix")
-
+    optParser.add_option("--seed", dest="seed", default=42, metavar="BRACKET",
+                         help="Only for automate.py")
+    optParser.add_option("--start", dest="start", default=0, metavar="NUM",
+                         help="Only for automate.py")
+    optParser.add_option("--end", dest="end", default=16, metavar="BRACKET",
+                         help="Only for automate.py")
     options, args = optParser.parse_args()
     return options
 
