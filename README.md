@@ -41,7 +41,9 @@ Adaptive Traffic Control System Using Reinforcment Learning
 
 1. Run project with python3:
 
-        python runner.py
+        python runner.py -C 500
+
+![Simulation running in Sumo](./docs/simulation.png)
 
 > NOTE: Ensure that SUMO_HOME path is defined in environment variables
 
@@ -62,9 +64,9 @@ Adaptive Traffic Control System Using Reinforcment Learning
 
 ### Automatically run all modes
 
-        python automate.py
+        python automate.py  -C 1000
 
-This will run all the possible combinations for learning/state/phasing/action and print outputs. Total 17 modes (0-16).
+This will run all the possible combinations for learning/state/phasing/action and print outputs. Total 17 modes (0-16). Can take a lot of time to run, depends on number of cars simulated.
 
 ## Uses
 
