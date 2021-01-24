@@ -74,6 +74,7 @@ def generate_routefile(numberCars):
         vType = '\'typedist1\''
     fileDir = os.path.dirname(os.path.realpath('__file__'))
     filename = os.path.join(fileDir, 'data/cross.net.xml')
+    print("Generating trip information from randomTrips")
     os.system("python randomTrips.py -n " + filename
               + " --weights-prefix " + os.path.join(fileDir, 'data/cross')
               + " -e " + str(numberCars)
@@ -84,6 +85,7 @@ def generate_routefile(numberCars):
               os.path.join(fileDir, 'data/type.add.xml')
               + " --edge-permission emergency passenger taxi bus truck motorcycle bicycle"
               )
+    print("Trip information generated in data/cross.rou.xml")
 
 
 def plotGraph(xVar, yVar):

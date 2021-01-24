@@ -301,7 +301,7 @@ def get_options():
     return options
 
 
-def run_sim(mode_num, mode_description, options):
+def run_sim(mode_num, options):
     # this script has been called from the command line. It will start sumo as a
     # server, then connect and run
     if options.nogui:
@@ -325,8 +325,12 @@ def run_sim(mode_num, mode_description, options):
     else:
         print("WARNING: sublanes is greater than 6, defaulting to 2")
     lateral_resolution_width = str(lateral_resolution_width)
+    mode_description = "No Learning"
+    if (options.learn != '0'):
+        mode_description = 'Learning=%s, with State=%s, ActionSelection=%s and %s Phasing' % (
+            "Q-learning" if options.learn == '1' else "SARSA", "Queue Length" if options.stateRep == '1' else "Cumulative Delay", "e-greedy" if options.actionSel == '1' else "softmax", "Fixed" if options.phasing == '1' else "Variable")
 
-    print("Mode", mode_num, " :", mode_description)
+    print("Mode", mode_num, ":", mode_description)
     traci.start([sumoBinary, "-a", traci_add_option,
                  "-c", "data/cross.sumocfg",
                  "-n", "data/cross.net.xml",
@@ -338,7 +342,7 @@ def run_sim(mode_num, mode_description, options):
                  "--output-prefix", 'outputs/logs/' + options.dbName
                  ])
     init(options)
-    print("Average QL for", mode_description, " :", run(options))
+    print("Average QL for", mode_description, " =", run(options))
 
 
 # this is the main entry point of this script
@@ -348,4 +352,4 @@ if __name__ == "__main__":
     generate_routefile(options.numberCars)
 
     # Sumo is started as a subprocess and then the python script connects
-    run_sim("Custom", "", options)
+    run_sim("Custom", options)

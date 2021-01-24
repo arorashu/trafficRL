@@ -343,11 +343,11 @@ def main(options):
                 '--begin', str(options.begin), '--end', str(options.end), '--no-step-log', '--no-warnings']
         if options.additional is not None:
             args += ['--additional-files', options.additional]
-        print("calling ", " ".join(args))
+        print("Calling ", " ".join(args))
         subprocess.call(args)
 
     if options.validate:
-        print("calling route2trips")
+        print("Calling route2trips")
         route2trips.main([options.routefile], outfile=options.tripfile)
 
     if options.weights_outprefix:
