@@ -4,7 +4,7 @@ on:
     branches:
       - master
 jobs:
-  build-and-deploy:
+  run:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
@@ -17,16 +17,37 @@ jobs:
         with:
           mongodb-version: 4.2
 
-      - name: Install Sumo
+      - name: Install Sumo 🚘
         run: |
           sudo add-apt-repository ppa:sumo/stable
           sudo apt-get update
           sudo apt-get install sumo sumo-tools sumo-doc
 
-      - name: Install Requirements
-        run: pip3 install -r requirements.txt
+      - name: Setup Python 🐍
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - name: Cache pip
+        uses: actions/cache@v2
+        with:
+          # This path is specific to Ubuntu
+          path: ~/.cache/pip
+          # Look to see if there is a cache hit for the corresponding requirements file
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+            ${{ runner.os }}-
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
-      - name: Run Automate
-        run: python automate.py  -C 200 --nogui
+      - name: Run Automate 🚦
+        run: python automate.py  -C 200 --nogui | tee outputs/automate.log
         env:
           SUMO_HOME: /usr/share/sumo
+
+      - name: Upload output logs 🗂
+        uses: actions/upload-artifact@v2
+        with:
+          name: traffic-rl-results
+          path: outputs
+        if: ${{ always() }}
