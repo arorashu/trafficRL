@@ -1,6 +1,3 @@
-"""
-
-"""
 from __future__ import absolute_import
 from __future__ import print_function
 
@@ -25,7 +22,7 @@ try:
     from sumolib import checkBinary
 except ImportError:
     sys.exit(
-        "please declare environment variable 'SUMO_HOME' as the root directory of your sumo installation (it should contain folders 'bin', 'tools' and 'docs')")
+        "Please declare environment variable 'SUMO_HOME' as the root directory of your sumo installation (it should contain folders 'bin', 'tools' and 'docs')")
 
 import traci
 client = MongoClient()
@@ -293,21 +290,18 @@ def get_options():
                          help="specify phasing scheme (1 = Fixed Phasing, 2 = Variable Phasing)")
     optParser.add_option("--action", dest="actionSel", default='1', metavar="NUM", choices=['1', '2'],
                          help="specify action selection method (1 = epsilon greedy, 2 = softmax)")
-    optParser.add_option("--sublane", dest="sublaneNumber", default=2, metavar="FLOAT",
+    optParser.add_option("--sublane", dest="sublaneNumber", default=5, metavar="FLOAT",
                          help="specify number of sublanes per edge (max=6) ")
     optParser.add_option("--dbstep", dest="sbStep", default=10, metavar="NUM",
                          help="specify dbStep, default is 10 ")
-    optParser.add_option("--dbName", dest="dbName", default='tl', metavar="STRING",
+    optParser.add_option("--dbName", dest="dbName", default='trafficRL', metavar="STRING",
                          help="specify dbName prefix")
 
     options, args = optParser.parse_args()
     return options
 
 
-# this is the main entry point of this script
-if __name__ == "__main__":
-    options = get_options()
-
+def run_sim(mode_num, mode_description, options):
     # this script has been called from the command line. It will start sumo as a
     # server, then connect and run
     if options.nogui:
@@ -315,33 +309,43 @@ if __name__ == "__main__":
     else:
         sumoBinary = checkBinary('sumo-gui')
 
-    # generate the route file for this simulation
-    generate_routefile(options)
-
     options.dbName = getDBName(options)
 
-    addFile = "data/cross.add.xml"
+    traci_add_option = "data/cross.add.xml"
     if (options.learn == '0'):
-        addFile = "data/cross_no_learn.add.xml"
+        traci_add_option = "data/cross_no_learn.add.xml"
     elif (options.phasing == '2'):
-        addFile = "data/cross_variable.add.xml"
+        traci_add_option = "data/cross_variable.add.xml"
 
     edgeWidth = 5
     lateral_resolution_width = 2.5
     if(int(options.sublaneNumber) <= 6.0):
         lateral_resolution_width = float(
             edgeWidth / int(options.sublaneNumber))
-
+    else:
+        print("WARNING: sublanes is greater than 6, defaulting to 2")
     lateral_resolution_width = str(lateral_resolution_width)
 
-    # Sumo is started as a subprocess and then the python script connects and
-    # runs
-    traci.start([sumoBinary, "-c", "data/cross.sumocfg",
-                             "-n", "data/cross.net.xml",
-                             "-a", addFile,
-                             "-r", "data/cross.rou.xml",
-                             "--lateral-resolution", lateral_resolution_width,
-                             "--queue-output", "queue.xml",
-                             "--tripinfo-output", "tripinfo.xml"])
+
+    print("Mode", mode_num, " :", mode_description)
+    traci.start([sumoBinary, "-a", traci_add_option,
+                                "-c", "data/cross.sumocfg",
+                                "-n", "data/cross.net.xml",
+                                "-r", "data/cross.rou.xml",
+                                "--lateral-resolution", lateral_resolution_width,
+                                "--queue-output", "queue.xml",
+                                "--tripinfo-output", "tripinfo.xml",
+                                "--duration-log.statistics", "true",
+                                "--output-prefix", 'outputs/logs/' + options.dbName
+                    ])
     init(options)
-    run(options)
+    print("Average QL for", mode_description, " :", run(options))
+
+# this is the main entry point of this script
+if __name__ == "__main__":
+    options = get_options()
+    # generate the route file for this simulation
+    generate_routefile(options.numberCars)
+
+    # Sumo is started as a subprocess and then the python script connects
+    run_sim("Custom", "", options)

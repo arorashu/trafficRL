@@ -66,7 +66,7 @@ def updateVehDistribution():
 # this uses randomtrips.py to generate a routefile with random traffic
 
 
-def generate_routefile(options):
+def generate_routefile(numberCars):
     # generating route file using randomTrips.py
     if (os.name == "posix"):
         vType = '\"\'typedist1\'\"'
@@ -76,7 +76,7 @@ def generate_routefile(options):
     filename = os.path.join(fileDir, 'data/cross.net.xml')
     os.system("python randomTrips.py -n " + filename
               + " --weights-prefix " + os.path.join(fileDir, 'data/cross')
-              + " -e " + str(options.numberCars)
+              + " -e " + str(numberCars)
               + " -p  4" + " -r " + os.path.join(fileDir, 'data/cross.rou.xml')
               # + " --fringe-factor " + str(fringeFactor)
               + " --trip-attributes=\"type=\"" + vType + "\"\""
@@ -103,7 +103,6 @@ def savePlot(dbName):
     plt.grid(alpha=0.8)
     plt.savefig('outputs/ql' + dbName + '.png')
     plt.savefig('outputs/ql' + dbName + '.pdf')
-
 
 if __name__ != "__main__":
     global fig, ax, hl
