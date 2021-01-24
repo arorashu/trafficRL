@@ -7,11 +7,10 @@ from pymongo import MongoClient
 from dbFunction import getRunCount
 
 client = MongoClient()
-db = client['tl']
 
 
 def getDBName(options):
-    name = 'tl'
+    name = options.dbName
     if (options.learn == '0'):
         return name + '_preTimed'
     elif (options.learn == '1'):
