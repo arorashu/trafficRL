@@ -326,20 +326,20 @@ def run_sim(mode_num, mode_description, options):
         print("WARNING: sublanes is greater than 6, defaulting to 2")
     lateral_resolution_width = str(lateral_resolution_width)
 
-
     print("Mode", mode_num, " :", mode_description)
     traci.start([sumoBinary, "-a", traci_add_option,
-                                "-c", "data/cross.sumocfg",
-                                "-n", "data/cross.net.xml",
-                                "-r", "data/cross.rou.xml",
-                                "--lateral-resolution", lateral_resolution_width,
-                                "--queue-output", "queue.xml",
-                                "--tripinfo-output", "tripinfo.xml",
-                                "--duration-log.statistics", "true",
-                                "--output-prefix", 'outputs/logs/' + options.dbName
-                    ])
+                 "-c", "data/cross.sumocfg",
+                 "-n", "data/cross.net.xml",
+                 "-r", "data/cross.rou.xml",
+                 "--lateral-resolution", lateral_resolution_width,
+                 "--queue-output", "queue.xml",
+                 "--tripinfo-output", "tripinfo.xml",
+                 "--duration-log.statistics", "true",
+                 "--output-prefix", 'outputs/logs/' + options.dbName
+                 ])
     init(options)
     print("Average QL for", mode_description, " :", run(options))
+
 
 # this is the main entry point of this script
 if __name__ == "__main__":

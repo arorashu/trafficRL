@@ -87,6 +87,5 @@ Currently it expects mongo on localhost on the default port without any authenti
 For auto fixes use `autopep8`:
 
         ```sh
-        python -m pip install autopep8
         autopep8 --in-place --aggressive  --exclude "__pycache__,.venv"  ./*.py
         ```

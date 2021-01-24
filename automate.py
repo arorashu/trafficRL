@@ -7,6 +7,7 @@ import globals
 from helper import updateVehDistribution, generate_routefile
 from runner import run_sim, get_options
 
+
 def get_automate_options():
     optParser = optparse.OptionParser()
     optParser.add_option("--cars", "-C", dest="numberCars", default=200000, metavar="NUM",
@@ -19,6 +20,7 @@ def get_automate_options():
                          help="specify the end index of the combinations to run")
     options, args = optParser.parse_args()
     return options
+
 
 # this is the main entry point of this script
 if __name__ == "__main__":
@@ -48,13 +50,19 @@ if __name__ == "__main__":
         options.stateRep = '1'
         options.learn = '1'
         options.actionSel = '1'
-        run_sim(1, "Q-learning with state=queue and actSel=e-greedy FIXED", options)
+        run_sim(
+            1,
+            "Q-learning with state=queue and actSel=e-greedy FIXED",
+            options)
 
     if (automate_options.start <= 2 and automate_options.end >= 2):
         options.stateRep = '1'
         options.learn = '1'
         options.actionSel = '2'
-        run_sim(2, "Q-learning with state=queue and actSel=softmax FIXED", options)
+        run_sim(
+            2,
+            "Q-learning with state=queue and actSel=softmax FIXED",
+            options)
 
     if (automate_options.start <= 3 and automate_options.end >= 3):
         options.stateRep = '1'
@@ -72,13 +80,19 @@ if __name__ == "__main__":
         options.stateRep = '2'
         options.learn = '1'
         options.actionSel = '1'
-        run_sim(5, "Q-learning with state=delay and actSel=e-greedy FIXED", options)
+        run_sim(
+            5,
+            "Q-learning with state=delay and actSel=e-greedy FIXED",
+            options)
 
     if (automate_options.start <= 6 and automate_options.end >= 6):
         options.stateRep = '2'
         options.learn = '1'
         options.actionSel = '2'
-        run_sim(6, "Q-learning with state=delay and actSel=softmax FIXED", options)
+        run_sim(
+            6,
+            "Q-learning with state=delay and actSel=softmax FIXED",
+            options)
 
     if (automate_options.start <= 7 and automate_options.end >= 7):
         options.stateRep = '2'
@@ -100,46 +114,70 @@ if __name__ == "__main__":
         options.stateRep = '1'
         options.learn = '1'
         options.actionSel = '1'
-        run_sim(9, "Q-learning with state=queue and actSel=e-greedy VARIABLE", options)
+        run_sim(
+            9,
+            "Q-learning with state=queue and actSel=e-greedy VARIABLE",
+            options)
 
     if (automate_options.start <= 10 and automate_options.end >= 10):
         options.stateRep = '1'
         options.learn = '1'
         options.actionSel = '2'
-        run_sim(10, "Q-learning with state=queue and actSel=softmax VARIABLE", options)
+        run_sim(
+            10,
+            "Q-learning with state=queue and actSel=softmax VARIABLE",
+            options)
 
     if (automate_options.start <= 11 and automate_options.end >= 11):
         options.stateRep = '1'
         options.learn = '2'
         options.actionSel = '1'
-        run_sim(11, "SARSA with state=queue and actSel=e-greedy VARIABLE", options)
+        run_sim(
+            11,
+            "SARSA with state=queue and actSel=e-greedy VARIABLE",
+            options)
 
     if (automate_options.start <= 12 and automate_options.end >= 12):
         options.stateRep = '1'
         options.learn = '2'
         options.actionSel = '2'
-        run_sim(12, "SARSA with state=queue and actSel=softmax VARIABLE", options)
+        run_sim(
+            12,
+            "SARSA with state=queue and actSel=softmax VARIABLE",
+            options)
 
     if (automate_options.start <= 13 and automate_options.end >= 13):
         options.stateRep = '2'
         options.learn = '1'
         options.actionSel = '1'
-        run_sim(13, "Q-learning with state=delay and actSel=e-greedy VARIABLE", options)
+        run_sim(
+            13,
+            "Q-learning with state=delay and actSel=e-greedy VARIABLE",
+            options)
 
     if (automate_options.start <= 14 and automate_options.end >= 14):
         options.stateRep = '2'
         options.learn = '1'
         options.actionSel = '2'
-        run_sim(14, "Q-learning with state=delay and actSel=softmax VARIABLE", options)
+        run_sim(
+            14,
+            "Q-learning with state=delay and actSel=softmax VARIABLE",
+            options)
 
     if (automate_options.start <= 15 and automate_options.end >= 15):
         options.stateRep = '2'
         options.learn = '2'
         options.actionSel = '1'
-        run_sim(15, "SARSA with state=delay and actSel=e-greedy VARIABLE", options)
+        run_sim(
+            15,
+            "SARSA with state=delay and actSel=e-greedy VARIABLE",
+            options)
 
     if (automate_options.start <= 16 and automate_options.end >= 16):
         options.stateRep = '2'
         options.learn = '2'
         options.actionSel = '2'
-        run_sim(16, "SARSA with state=delay and actSel=softmax VARIABLE", options)
+        run_sim(
+            16,
+            "SARSA with state=delay and actSel=softmax VARIABLE",
+            options)

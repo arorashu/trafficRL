@@ -104,6 +104,7 @@ def savePlot(dbName):
     plt.savefig('outputs/ql' + dbName + '.png')
     plt.savefig('outputs/ql' + dbName + '.pdf')
 
+
 if __name__ != "__main__":
     global fig, ax, hl
 
