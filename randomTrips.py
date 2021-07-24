@@ -22,10 +22,10 @@ the Free Software Foundation; either version 3 of the License, or
 from __future__ import print_function
 from __future__ import absolute_import
 import os
+import logging
 import sys
 import random
 import bisect
-import datetime
 import subprocess
 from collections import defaultdict
 import math
@@ -34,18 +34,15 @@ import optparse
 # we need to import python modules from the $SUMO_HOME/tools directory
 
 try:
-    SUMO_HOME = os.environ.get('SUMO_HOME',
-                            os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
+    SUMO_HOME = os.environ.get('SUMO_HOME')
+    print(os.path.join(SUMO_HOME, 'tools'))
     sys.path.append(os.path.join(SUMO_HOME, 'tools'))
-    # sys.path.append(os.path.join(os.path.dirname(
-    #     __file__), '..', '..', '..', '..', "tools"))  # tutorial in tests
-    # sys.path.append(os.path.join(os.environ.get("SUMO_HOME", os.path.join(
-    #     os.path.dirname(__file__), "..", "..", "..")), "tools"))  # tutorial in docs
     from sumolib import checkBinary
     from route2trips import main
 except ImportError:
-    sys.exit(
-        "Please declare environment variable 'SUMO_HOME' as the root directory of your sumo installation (it should contain folders 'bin', 'tools' and 'docs')")
+    logging.exception(
+        "randomTrips: Please declare environment variable 'SUMO_HOME' as the root directory of your sumo installation (it should contain folders 'bin', 'tools' and 'docs')")
+    sys.exit(1)
 
 import route2trips  # nopep8
 import sumolib  # nopep8

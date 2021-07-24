@@ -3,6 +3,7 @@ from __future__ import print_function
 
 import os
 import sys
+import logging
 import optparse
 from collections import Counter
 from pymongo import MongoClient
@@ -18,9 +19,11 @@ try:
     sys.path.append(os.path.join(os.environ.get("SUMO_HOME", os.path.join(
         os.path.dirname(__file__), "..", "..", "..")), "tools"))  # tutorial in docs
     from sumolib import checkBinary
+    from traci import trafficlight
 except ImportError:
-    sys.exit(
-        "Please declare environment variable 'SUMO_HOME' as the root directory of your sumo installation (it should contain folders 'bin', 'tools' and 'docs')")
+    logging.exception(
+        "runner: Please declare environment variable 'SUMO_HOME' as the root directory of your sumo installation (it should contain folders 'bin', 'tools' and 'docs')")
+    sys.exit(1)
 
 import traci
 client = MongoClient()
