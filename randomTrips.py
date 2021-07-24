@@ -37,6 +37,8 @@ try:
     SUMO_HOME = os.environ.get('SUMO_HOME')
     print(os.path.join(SUMO_HOME, 'tools'))
     sys.path.append(os.path.join(SUMO_HOME, 'tools'))
+    # See: https://github.com/eclipse/sumo/commit/abc9b02583eb697ec127933e91d277f5aa1f8b8f
+    sys.path.append(os.path.join(SUMO_HOME, 'tools', 'purgatory'))
     from sumolib import checkBinary
     from route2trips import main
 except ImportError:
