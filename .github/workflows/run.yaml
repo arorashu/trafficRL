@@ -48,10 +48,10 @@ jobs:
         run: |
           set -e
           set -o pipefail
-          echp "Listing SUMO_HOME"
+          echo "Listing SUMO_HOME"
           ls $SUMO_HOME
 
-          echp "Running automate.py"
+          echo "Running automate.py"
           python automate.py -C 200 --nogui | tee outputs/automate.log
         env:
           SUMO_HOME: /usr/share/sumo
