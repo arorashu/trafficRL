@@ -45,7 +45,11 @@ jobs:
           python -m pip install --upgrade numpy 
 
       - name: Run Automate 🚦
-        run: python automate.py  -C 200 --nogui | tee outputs/automate.log
+        run: |
+          set -e
+          set -o pipefail
+
+          python automate.py -C 200 --nogui | tee outputs/automate.log
         env:
           SUMO_HOME: /usr/share/sumo
 
