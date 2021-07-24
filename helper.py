@@ -1,10 +1,9 @@
-from xml.etree import ElementTree as et
 import os
 import random
 import numpy as np
-import matplotlib.pyplot as plt
 from pymongo import MongoClient
-from dbFunction import getRunCount
+from xml.etree import ElementTree as et
+import matplotlib.pyplot as plt
 
 client = MongoClient()
 

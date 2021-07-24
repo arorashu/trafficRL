@@ -1,7 +1,4 @@
-import os
-import sys
 import optparse
-import subprocess
 import random
 import globals
 from helper import updateVehDistribution, generate_routefile

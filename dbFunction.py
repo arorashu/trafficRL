@@ -1,9 +1,9 @@
+import globals
+import pprint
 from pymongo import MongoClient, ASCENDING
 from actionSelection import eGreedy, softmax
 from learningMethods import qLearning, sarsa
 from rewardDefinitions import queueBalanceReward, delayReward
-import globals
-import pprint
 
 pp = pprint.PrettyPrinter(indent=4)
 client = MongoClient()

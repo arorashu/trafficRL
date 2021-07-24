@@ -4,13 +4,11 @@ from __future__ import print_function
 import os
 import sys
 import optparse
-import subprocess
-import random
 from collections import Counter
 from pymongo import MongoClient
 from dbFunction import dbFunction, initTrafficLight, initRunCount, saveStats, getRunCount
 from globals import init
-from helper import updateVehDistribution, plotGraph, savePlot, generate_routefile, getDBName
+from helper import plotGraph, savePlot, generate_routefile, getDBName
 
 
 # we need to import python modules from the $SUMO_HOME/tools directory
