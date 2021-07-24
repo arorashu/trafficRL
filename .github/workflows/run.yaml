@@ -49,6 +49,8 @@ jobs:
           set -e
           set -o pipefail
 
+          ls $SUMO_HOME
+
           python automate.py -C 200 --nogui | tee outputs/automate.log
         env:
           SUMO_HOME: /usr/share/sumo
