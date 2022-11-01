@@ -2,7 +2,7 @@ autopep8==1.5.3
 cycler==0.10.0
 kiwisolver==1.2.0
 matplotlib==3.2.2
-numpy==1.19.0
+numpy==1.22.0
 pycodestyle==2.6.0
 pymongo==3.10.1
 pyparsing==2.4.7
