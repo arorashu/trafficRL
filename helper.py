@@ -7,11 +7,10 @@ from pymongo import MongoClient
 from dbFunction import getRunCount
 
 client = MongoClient()
-db = client['tl']
 
 
 def getDBName(options):
-    name = 'tl'
+    name = options.dbNamePrefix
     if (options.learn == '0'):
         return name + '_preTimed'
     elif (options.learn == '1'):
@@ -67,7 +66,7 @@ def updateVehDistribution():
 # this uses randomtrips.py to generate a routefile with random traffic
 
 
-def generate_routefile(options):
+def generate_routefile(numberCars):
     # generating route file using randomTrips.py
     if (os.name == "posix"):
         vType = '\"\'typedist1\'\"'
@@ -75,9 +74,10 @@ def generate_routefile(options):
         vType = '\'typedist1\''
     fileDir = os.path.dirname(os.path.realpath('__file__'))
     filename = os.path.join(fileDir, 'data/cross.net.xml')
+    print("Generating trip information from randomTrips")
     os.system("python randomTrips.py -n " + filename
               + " --weights-prefix " + os.path.join(fileDir, 'data/cross')
-              + " -e " + str(options.numberCars)
+              + " -e " + str(numberCars)
               + " -p  4" + " -r " + os.path.join(fileDir, 'data/cross.rou.xml')
               # + " --fringe-factor " + str(fringeFactor)
               + " --trip-attributes=\"type=\"" + vType + "\"\""
@@ -85,6 +85,7 @@ def generate_routefile(options):
               os.path.join(fileDir, 'data/type.add.xml')
               + " --edge-permission emergency passenger taxi bus truck motorcycle bicycle"
               )
+    print("Trip information generated in data/cross.rou.xml")
 
 
 def plotGraph(xVar, yVar):
